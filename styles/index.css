@@ -1,0 +1,96 @@
+.container {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: var(--common-box-shadow);
+  border: var(--common-border);
+  padding: 10px 20px;
+  width: 100%;
+  min-height: 170px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.container img {
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.container-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-info h2 {
+  font-size: 1.8em;
+  font-weight: 400;
+  margin: 0 0 5px 0;
+}
+
+.container-info span {
+  font-size: 1.05em;
+  font-weight: 300;
+  opacity: 0.5;
+  margin: 0 0 5px 0;
+}
+
+.container .button-secondary {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.dark .container-info h2,
+.dark .container-info span {
+  color: #fff;
+}
+
+.dark .container {
+  background-color: var(--darkmode-lighter-background-color);
+}
+
+#star-button {
+  display: block;
+  padding: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  opacity: 0.6;
+  transition: opacity 200ms ease-in-out;
+}
+
+#star-button:hover,
+#star-button:focus {
+  opacity: 1;
+}
+
+#star-button,
+#star-button svg {
+  width: 25px;
+  height: 25px;
+}
+
+#star-button svg path:first-child {
+  fill: gold;
+}
+
+#star-button svg path:last-child {
+  fill: transparent;
+  transition: fill 200ms ease-in-out;
+}
+
+#star-button svg.active path:last-child {
+  fill: gold;
+}
+
+#star-button * {
+  pointer-events: none;
+}

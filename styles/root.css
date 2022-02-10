@@ -1,0 +1,16 @@
+:root {
+  --sidebar-width: 23vw;
+  --header-height: 12vh;
+  --main-color: rgb(0, 126, 180);
+  --main-color-light100: rgba(0, 126, 180, 0.1);
+  --main-color-hover: rgb(0, 87, 124);
+  --common-box-shadow: 2px 2px 8px rgba(68, 68, 68, 0.2);
+  --common-border: 1px solid rgba(68, 68, 68, 0.2);
+  --text-color: #444;
+  --lightmode-background-color: #f5f6fb;
+  --darkmode-background-color: #101010;
+  --darkmode-lighter-background-color: #191919;
+  --darkmode-main-color: #133774;
+  --darkmode-main-color-hover: #0e2855;
+  --darkmode-main-color-light100: rgba(19, 55, 116, 0.1);
+}

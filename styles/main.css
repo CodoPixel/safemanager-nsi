@@ -4,3 +4,178 @@
   font-family: "Nunito", sans-serif;
   color: #444;
 }
+
+body,
+main,
+header,
+aside,
+article,
+footer,
+nav,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--lightmode-background-color);
+}
+
+.dark {
+  background-color: var(--darkmode-background-color);
+}
+
+main {
+  padding-left: var(--sidebar-width);
+}
+
+.input,
+.textarea {
+  font-size: 1.05em;
+  border: var(--common-border);
+  box-shadow: var(--common-box-shadow);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.input {
+  height: 45px;
+  max-width: 300px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.dark .input,
+.dark .textarea {
+  border: 2px solid var(--darkmode-background-color);
+  background-color: var(--darkmode-lighter-background-color);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.textarea {
+  min-height: 80px;
+  height: 100%;
+  width: 100%;
+  resize: none;
+  padding: 10px;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark .input:focus,
+.dark .textarea:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(68, 68, 68, 0.5);
+}
+
+.content-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.content-topbar-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.content-topbar-buttons *:first-child {
+  margin-right: 20px;
+}
+
+.content {
+  padding: 50px;
+}
+
+.dark .content-topbar p,
+.dark .content-topbar strong {
+  color: #fff;
+}
+
+.dark .content-topbar p {
+  font-size: 1.1em;
+}
+
+.button-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: var(--main-color);
+  border-radius: 5px;
+  height: 50px;
+  max-width: 220px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  font-size: 1.1em;
+  transition: background-color 200ms ease;
+}
+
+.dark .button-primary {
+  background-color: var(--darkmode-main-color);
+}
+
+.button-primary:hover,
+.button-primary:focus {
+  background-color: var(--main-color-hover);
+}
+
+.button-primary:hover,
+.button-primary:focus {
+  background-color: var(--darkmode-main-color-hover);
+}
+
+.button-secondary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--main-color);
+  background-color: transparent;
+  border-radius: 5px;
+  height: 50px;
+  max-width: 220px;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid var(--main-color);
+  font-size: 1.1em;
+  transition: background-color 200ms ease;
+}
+
+.dark .button-secondary {
+  color: var(--darkmode-main-color);
+  border: 1px solid var(--darkmode-main-color);
+}
+
+.button-secondary:hover,
+.button-secondary:focus {
+  background-color: var(--main-color-light100);
+}
+
+.button-secondary:hover,
+.button-secondary:focus {
+  background-color: var(--darkmode-main-color-light100);
+}
