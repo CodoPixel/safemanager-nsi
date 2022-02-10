@@ -1,3 +1,6 @@
+<?php
+require_once "class/HtmlBuilder.php";
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,33 +16,9 @@
   <title>SafeManager - Ajouter un mot de passe</title>
 </head>
 <body class="dark">
-  <aside>
-    <h1 class="appname">SafeManager</h1>
-    <div class="sidebar-containerProfile">
-      <img alt="avatar" src="assets/private/default-avatar.png" />
-      <span>Bienvenue,</span>
-      <h1>Thomas Gysemans</h1>
-    </div>
-    <nav>
-      <a class="sidebar-item active" href="index.php">
-        <i class="fa-solid fa-lock"></i><span>Mots de passe</span>
-      </a>
-      <a class="sidebar-item" href="notes.php">
-        <i class="fa-regular fa-note-sticky"></i><span>Notes</span>
-      </a>
-      <a class="sidebar-item" href="images.php">
-        <i class="fa-regular fa-image"></i><span>Images</span>
-      </a>
-      <a class="sidebar-item" href="settings.php">
-        <i class="fa-solid fa-gear"></i><span>Paramètres</span>
-      </a>
-      <a class="sidebar-item" href="../index.php">
-        <i class="fa-solid fa-globe"></i><span>Sites web</span>
-      </a>
-    </nav>
-  </aside>
+  <?= HtmlBuilder::sidebar("index"); ?>
   <main>
-    <header></header>
+    <?= HtmlBuilder::header(true, null); ?>
     <div>
     <div class="content">
       <div class="content-topbar">
@@ -81,5 +60,6 @@
     </div>
   </main>
 
+  <script src="js/sidebar.js"></script>
 </body>
 </html>

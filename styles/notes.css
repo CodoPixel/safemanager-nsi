@@ -1,0 +1,82 @@
+.container-notes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.note {
+  display: block;
+  box-sizing: border-box;
+  text-decoration: none;
+  background-color: #fff;
+  box-shadow: var(--common-box-shadow);
+  border: var(--common-border);
+  border-radius: 5px;
+  padding: 20px;
+  max-width: 350px;
+  width: 100%;
+  min-height: 100px;
+  height: 100%;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  position: relative;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 200ms ease;
+}
+
+.note:hover,
+.note:focus {
+  opacity: 1;
+}
+
+.note:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark .note {
+  background-color: var(--darkmode-lighter-background-color);
+}
+
+.dark .note:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.note .label {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.note h2 {
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: var(--common-border);
+  width: 90%;
+  font-size: 1.3em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.note p {
+  margin: 0;
+}
+
+.dark .note h2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark .note h2,
+.dark .note p {
+  color: #fff;
+}
+
+@media screen and (max-width: 500px) {
+  .note h2 {
+    font-size: 1.2em;
+  }
+
+  .note p {
+    font-size: 0.9em;
+  }
+}

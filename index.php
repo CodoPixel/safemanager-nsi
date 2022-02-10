@@ -1,3 +1,6 @@
+<?php
+require_once "class/HtmlBuilder.php";
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,36 +16,9 @@
   <title>SafeManager - Application</title>
 </head>
 <body class="dark">
-  <aside>
-    <h1 class="appname">SafeManager</h1>
-    <div class="sidebar-containerProfile">
-      <img alt="avatar" src="assets/private/default-avatar.png" />
-      <span>Bienvenue,</span>
-      <h1>Thomas Gysemans</h1>
-    </div>
-    <nav>
-      <a class="sidebar-item active" href="index.php">
-        <i class="fa-solid fa-lock"></i><span>Mots de passe</span>
-      </a>
-      <a class="sidebar-item" href="notes.php">
-        <i class="fa-regular fa-note-sticky"></i><span>Notes</span>
-      </a>
-      <a class="sidebar-item" href="images.php">
-        <i class="fa-regular fa-image"></i><span>Images</span>
-      </a>
-      <a class="sidebar-item" href="settings.php">
-        <i class="fa-solid fa-gear"></i><span>Paramètres</span>
-      </a>
-      <a class="sidebar-item" href="../index.php">
-        <i class="fa-solid fa-globe"></i><span>Sites web</span>
-      </a>
-    </nav>
-  </aside>
+  <?= HtmlBuilder::sidebar("index"); ?>
   <main>
-    <header>
-      <a title="Créer un mot de passe" class="header-key" href="password.php"><i class="fa-solid fa-key"></i></a>
-      <input type="text" class="input" placeholder="Rechercher un mot de passe" id="search" maxlength="50" autocomplete="off" spellcheck="false" />
-    </header>
+    <?= HtmlBuilder::header(true, "Rechercher un mot de passe"); ?>
     <div class="content">
       <div class="content-topbar">
         <p>Vous avez <strong>3</strong> connexions :</p>
@@ -61,7 +37,7 @@
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
           </svg>
         </button>
-        <button style="width:150px;" class="button-secondary" type="button">Consulter</button>
+        <a style="width:150px;" href="password.php?id=yoyo" class="button-secondary">Consulter</a>
       </div>
       <div class="container">
         <img src="assets/private/default-password.png" alt="logo" />
@@ -76,7 +52,7 @@
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
           </svg>
         </button>
-        <button style="width:150px;" class="button-secondary" type="button">Consulter</button>
+        <a style="width:150px;" href="password.php?id=yoyo" class="button-secondary">Consulter</a>
       </div>
       <div class="container">
         <img src="assets/private/default-password.png" alt="logo" />
@@ -91,7 +67,7 @@
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
           </svg>
         </button>
-        <button style="width:150px;" class="button-secondary" type="button">Consulter</button>
+        <a style="width:150px;" href="password.php?id=yoyo" class="button-secondary">Consulter</a>
       </div>
       <div class="container">
         <img src="assets/private/default-password.png" alt="logo" />
@@ -106,7 +82,7 @@
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
           </svg>
         </button>
-        <button style="width:150px;" class="button-secondary" type="button">Consulter</button>
+        <a style="width:150px;" href="password.php?id=yoyo" class="button-secondary">Consulter</a>
       </div>
       <div class="container">
         <img src="assets/private/default-password.png" alt="logo" />
@@ -121,9 +97,11 @@
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
           </svg>
         </button>
-        <button style="width:150px;" class="button-secondary" type="button">Consulter</button>
+        <a style="width:150px;" href="password.php?id=yoyo" class="button-secondary">Consulter</a>
       </div>
     </div>
   </main>
+
+  <script src="js/sidebar.js"></script>
 </body>
 </html>

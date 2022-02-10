@@ -24,6 +24,7 @@
 .container-info {
   display: flex;
   flex-direction: column;
+  width: 50%;
 }
 
 .container-info h2 {
@@ -37,6 +38,14 @@
   font-weight: 300;
   opacity: 0.5;
   margin: 0 0 5px 0;
+}
+
+.container-info h2,
+.container-info span {
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .container .button-secondary {
@@ -93,4 +102,57 @@
 
 #star-button * {
   pointer-events: none;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: 230px;
+    padding-top: 20px;
+  }
+
+  .container .button-secondary {
+    right: initial;
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .container {
+    min-height: 200px;
+  }
+
+  #star-button {
+    top: initial;
+    bottom: 30px;
+  }
+
+  .container img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .container-info h2 {
+    font-size: 1.5em;
+  }
+
+  .container-info span {
+    font-size: 0.9em;
+  }
+}
+
+@media screen and (max-width: 365px) {
+  .container img {
+    display: none;
+  }
+
+  #star-button {
+    top: 20px;
+    bottom: initial;
+  }
+
+  .container-info {
+    width: 80%;
+  }
 }

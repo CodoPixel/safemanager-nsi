@@ -1,0 +1,68 @@
+form {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: var(--common-box-shadow);
+  border: var(--common-border);
+  background-color: #fff;
+  padding: 30px;
+}
+
+.container-maininfo {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid;
+  border-bottom: var(--common-border);
+  margin: 0 0 30px 0;
+  padding-bottom: 30px;
+}
+
+.container-label-and-select {
+  display: flex;
+  align-items: center;
+}
+
+.container-maininfo .label {
+  margin-left: 40px;
+  margin-right: 10px;
+}
+
+.container-label-and-select {
+  margin-right: 10px;
+  width: 100%;
+}
+
+.container-create-label {
+  display: flex;
+  width: 100%;
+}
+
+.dark .container-maininfo {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark form {
+  background-color: var(--darkmode-lighter-background-color);
+}
+
+@media screen and (max-width: 730px) {
+  .container-maininfo {
+    flex-direction: column;
+  }
+
+  .container-label-and-select,
+  .container-create-label {
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0 0 0;
+  }
+
+  .container-maininfo .label {
+    margin-left: 0px;
+    margin-right: 10px;
+  }
+
+  .container-label-and-select select {
+    max-width: 270px;
+  }
+}
