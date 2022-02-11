@@ -1,0 +1,185 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  row-gap: 10px;
+  column-gap: 10px;
+}
+
+/* note that these elements are buttons */
+.container-image {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  display: block;
+  padding: 0;
+  transition: transform 200ms ease-in-out;
+}
+
+.container-image,
+.container-image .image-overlay,
+.container-image img {
+  border-radius: 5px;
+}
+
+.container-image:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark .container-image:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.image-overlay {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 200ms ease-in-out;
+}
+
+.container-image:hover .image-overlay,
+.container-image:focus .image-overlay {
+  background-color: transparent;
+  z-index: 30;
+}
+
+.container-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+*
+* Presentation
+*
+*/
+
+.presentation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100; /* above everything */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.93);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease-in-out;
+}
+
+/* #left,
+#right {
+  font-size: 3em;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+} */
+
+#left,
+#right {
+  font-size: 3em;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#left {
+  left: 0px;
+}
+
+#right {
+  right: 0px;
+}
+
+#left,
+#right,
+#cross {
+  opacity: 0.7;
+  transition: opacity 200ms ease;
+}
+
+#left:focus,
+#right:focus,
+#cross:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark #left:focus,
+.dark #right:focus,
+.dark #cross:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.presentation button i {
+  color: #fff;
+}
+
+#left:hover,
+#left:focus,
+#right:hover,
+#right:focus,
+#cross:hover,
+#cross:focus {
+  opacity: 1;
+}
+
+#cross {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.5em;
+}
+
+.presentation-container-image {
+  max-height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.presentation-container-image,
+.presentation-container-image img {
+  max-width: 90vw;
+}
+
+.presentation-container-image img {
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+.presentation.open {
+  opacity: 1;
+  pointer-events: all;
+  visibility: visible;
+}
+
+.presentation button:disabled {
+  opacity: 0.2 !important;
+  pointer-events: none !important;
+}
