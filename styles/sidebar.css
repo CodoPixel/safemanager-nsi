@@ -44,6 +44,8 @@ aside .appname {
 .sidebar-containerProfile img {
   width: 90px;
   height: 100%;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
 .sidebar-containerProfile span {

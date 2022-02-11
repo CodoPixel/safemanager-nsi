@@ -1,0 +1,253 @@
+.container {
+  border: var(--common-border);
+  box-shadow: var(--common-box-shadow);
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 40px;
+  width: 100%;
+}
+
+.dark .container {
+  background-color: var(--darkmode-lighter-background-color);
+}
+
+.container h2 {
+  font-size: 1.3em;
+  font-weight: 600;
+  width: 100%;
+  border-bottom: var(--common-border);
+  margin: 0 0 30px 0;
+  padding-bottom: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.dark .container h2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.dark .container h2,
+.dark .container span,
+.dark .container b {
+  color: #fff;
+}
+
+.container-personal-info {
+  display: flex;
+  align-items: center;
+}
+
+.button-container-image {
+  margin-right: 40px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 0;
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+}
+
+.button-container-image:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark .button-container-image:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.button-container-image .overlay-modify-image {
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #000;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease;
+}
+
+.button-container-image:hover .overlay-modify-image,
+.button-container-image:focus .overlay-modify-image {
+  opacity: 1;
+  visibility: visible;
+}
+
+.button-container-image .overlay-modify-image i {
+  color: #fff;
+  font-size: 1.2em;
+}
+
+.button-container-image,
+.button-container-image img {
+  width: 170px;
+  height: 170px;
+}
+
+.button-container-image img {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.container-personal-info input {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  .container-personal-info {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .personal-container-inputs {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container-personal-info input,
+  .button-container-image {
+    margin-right: 0px;
+  }
+}
+
+/*
+*
+* grid
+*
+*/
+
+.grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  column-gap: 20px;
+  row-gap: 40px;
+}
+
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 20px;
+  }
+
+  /* I want the grid to have one column when the contains are 310px wide,
+  but this is too much for responsivness, therefore I force the grid to display itself as one column */
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.container-customizations {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-switch {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  padding: 0;
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  position: relative;
+}
+
+.switch:focus {
+  outline: 3px solid var(--main-color);
+}
+
+.dark .switch:focus {
+  outline: 3px solid var(--darkmode-main-color);
+}
+
+.switch-state {
+  background-color: #fff;
+  border: var(--common-border);
+  box-shadow: var(--common-border);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0%, -50%);
+  transition: left 200ms ease;
+}
+
+.switch-background {
+  width: 100%;
+  height: 20px;
+  border-radius: 20px;
+  background-color: #444;
+}
+
+.on .switch-state {
+  left: calc(100% - 30px);
+}
+
+.on .switch-background {
+  background-color: var(--main-color);
+}
+
+.dark .on .switch-background {
+  background-color: var(--darkmode-main-color);
+}
+
+/* stats */
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stat:last-child {
+  margin-bottom: 0px;
+}
+
+@media screen and (max-width: 360px) {
+  .stat {
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+
+  .stat span {
+    text-align: center;
+  }
+
+  .container-switch {
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+
+  .switch {
+    margin-top: 10px;
+  }
+}

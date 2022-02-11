@@ -1,6 +1,8 @@
 :root {
   --sidebar-width: 23vw;
   --header-height: 12vh;
+  --red-color: #c85353;
+  --red-color-hover: #993737;
   --main-color: rgb(0, 126, 180);
   --main-color-light100: rgba(0, 126, 180, 0.1);
   --main-color-hover: rgb(0, 87, 124);

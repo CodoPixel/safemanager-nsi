@@ -232,6 +232,15 @@ main {
   color: var(--darkmode-main-color);
 }
 
+.button-primary.button-red {
+  background-color: var(--red-color);
+}
+
+.button-primary.button-red:hover,
+.button-primary.button-red:focus {
+  background-color: var(--red-color-hover);
+}
+
 /*
 *
 * labels
