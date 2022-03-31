@@ -1,6 +1,7 @@
 <?php
 
 require_once "config.php";
+require_once "Client.php";
 
 class Auth {
   protected static $pdo;
@@ -13,7 +14,7 @@ class Auth {
    */
   private static function init_pdo(): PDO {
     if (!self::$pdo) {
-      $dns = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
+      $dsn = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
       $username = "root";
       $password = "";
 
@@ -28,5 +29,25 @@ class Auth {
 
   public function __construct() {
     $this->init_pdo();
+  }
+
+  public function loginWithCredentials(string $email, string $password): ?Client {
+    $query = self::$pdo->prepare("SELECT * FROM client WHERE email=:email");
+    $query->execute(["email" => $email]);
+    $query->setFetchMode(PDO::FETCH_CLASS, Client::class);
+    /** @var Client|bool */
+    $client = $query->fetch();
+
+    if ($client instanceof Client) {
+      $hash = $client->getHashedPassword();
+      if (password_verify($password, $hash)) {
+        $_SESSION['clientID'] = $client->getClientID();
+        return $client;
+      } else {
+        throw new Exception("Addresse email ou mot de passe incorrects.");
+      }
+    } else {
+      throw new Exception("Cet utilisateur n'existe pas.");
+    }
   }
 }
