@@ -27,8 +27,42 @@ class Auth {
     return self::$pdo;
   }
 
+  public function register(string $email, string $password, string $firstname, string $lastname) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("Email fausse");
+    }
+
+    $query = self::$pdo->prepare("INSERT INTO client (email, clientID, firstname, lastname, password, registrationDate) VALUES (:email, :clientID, :firstname, :lastname, :password, :date)");
+    $query->execute([
+        "email" => $email,
+        "clientID" => "abcdef",
+        "firstname" => $firstname,
+        "lastname" => $lastname,
+        "password" => password_hash($password, PASSWORD_BCRYPT),
+        "date" => (new DateTime())->getTimestamp()
+    ]);
+
+    $_SESSION["clientID"] = $this->encryptUniqueID();
+  }
+
   public function __construct() {
     $this->init_pdo();
+  }
+
+    public static function isConnected(){
+      if (isset($_SESSION["clientID"])) {
+          return True;
+      } else {
+          return False;
+      }
+  }
+
+  private function encryptUniqueID(): string {
+      $unique_id = "";
+      for ($i = 0; $i < self::ENCRYID_LENGTH; $i++) {
+          $unique_id .= self::ENCRYID_ALPHABET[random_int(0, mb_strlen(self::ENCRYD_ALPHABET) -1)];
+      }
+      return $unique_id;
   }
 
   public function loginWithCredentials(string $email, string $password): ?Client {

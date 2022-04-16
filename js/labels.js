@@ -1,6 +1,10 @@
+"use strict";
 (function () {
-  const allLabels = document.querySelectorAll(".label");
-  for (let label of allLabels) {
-    label.style.backgroundColor = label.dataset.color;
-  }
+    const allLabels = document.querySelectorAll(".label");
+    for (let label of Array.from(allLabels)) {
+        const color = label.dataset.color;
+        if (color) {
+            label.style.backgroundColor = color;
+        }
+    }
 })();
