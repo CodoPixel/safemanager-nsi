@@ -1,0 +1,213 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap");
+/* ci-dessus le lien permettant d'ajouter la font 'Nunito' */
+
+* {
+  /* permet de sélectionner l'entièreté du contenu html */
+  font-family: "Nunito", sans-serif; /* si la nunito n'existe pas, elle sera remplacée par sans-serif */
+}
+
+body {
+  background-color: #f5f7fb;
+  height: 100vh; /* on sélectionne tout l'écran, 100vh = 100% de la hauteur de l'écran */
+  display: flex; /* définit le type d'affichage utilisé pour le rendu d'un élément */
+  justify-content: center; /* permet de centrer horizontalement */
+  align-items: center; /* permet de centrer verticalement */
+  margin: 0; /* définit la taille des marges sur les quatre côtés de l'élément */
+}
+
+.dark {
+  background-color: #101010;
+}
+
+.box {
+  display: flex; /* définit le type d'affichage utilisée pour le rendu d'un élément */
+  align-items: center; /* permet de centrer verticalement */
+  justify-content: center; /* permet de centrer horizontalement */
+  border-radius: 10px; /* arrondi les bords de la box */
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1); /* ajoute des ombres à la boîte d'un élément */
+  /* décalage de l'ombre horizontale | décalage de l'ombre verticale | blur radius -> plus il est grand, plus le flou de l'ombre sera diffus | couleurs(R,G,B,opacité) */
+  box-sizing: border-box; /* définit la façon dont la hauteur et la largeur totale d'un élément est calculée */
+  /* ici, elles sont définies par rapport aux bordures de la box */
+  padding: 30px; /* permet de ne pas coller le texte à ras de la box, il sera décalé de 30px */
+  background: #ffffff;
+}
+
+.dark .box {
+  background: #191919;
+}
+h1 {
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center; /* permet de centrer un texte */
+  margin: 0 0 10px 0; /* top | right | bottom | left */
+  color: #444444;
+}
+
+.dark h1 {
+  color: #ffff;
+}
+
+p {
+  text-align: center; /* permet de centrer un texte */
+  font-weight: 300; /* permet de modifier l'épaisseur du texte */
+  font-size: 18px;
+  margin: 0 0 20px 0; /* top | right | bottom | left */
+  color: #444;
+}
+
+.dark p {
+  color: #ffff;
+}
+
+a {
+  text-decoration: none; /* enlève le soulignement de l'hypertexte */
+  color: #007eb4; /* définition d'une couleur par défaut pour éviter le lien déjà visité de couleur violet */
+}
+
+.email input {
+  width: 351px; /* largeur */
+  height: 50px; /* hauteur */
+  border: 1px solid rgba(68, 68, 68, 0.1); /* permet de définir une bordure */
+  /* épaisseur de la bordure | solid = ligne simple et continue | couleurs(R,G,B,opacité) */
+  box-sizing: border-box; /* définit la façon dont la hauteur et la largeur totale d'un élément est calculée */
+  /* ici, elles sont définies par rapport aux bordures de la box */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /*ajoute des ombres à la boîte d'un élément */
+  /* décalage de l'ombre horizontale | décalage de l'ombre verticale | blur radius -> plus il est grand, plus le flou de l'ombre sera diffus | couleurs(R,G,B,opacité) */
+  border-radius: 5px; /* arrondi les bords de la box */
+  margin: 0 0 10px 0; /* top | right | bottom | left */
+  padding-left: 15px; /* réduit la zone de saisie à gauche */
+  padding-right: 15px; /* réduit la zone de saisie à droite */
+}
+
+.password {
+  position: relative; /* L'élément est positionné dans le flux normal du document puis décalé, par rapport à lui-même */
+  /* Le décalage n'a pas d'impact sur la position des éléments */
+}
+
+.password input {
+  width: 351px; /* largeur */
+  height: 50px; /* hauteur */
+  border: 1px solid rgba(68, 68, 68, 0.1); /* permet de définir une bordure */
+  /* épaisseur de la bordure | solid = ligne simple et continue | couleurs(R,G,B,opacité) */
+  box-sizing: border-box; /* définit la façon dont la hauteur et la largeur totale d'un élément est calculée */
+  /* ici, elles sont définies par rapport aux bordures de la box */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* ajoute des ombres à la boîte d'un élément */
+  /* décalage de l'ombre horizontale | décalage de l'ombre verticale | blur radius -> plus il est grand, plus le flou de l'ombre sera diffus | couleurs(R,G,B,opacité) */
+  display: block; /* permet de donner les caractéristiques d'un élément "block" comme des hauteurs, marges, ... */
+  border-radius: 5px; /* arrondi les bords de la box */
+  margin: 0 0 10px 0; /* top | right | bottom | left */
+  padding-left: 15px; /* réduit la zone de saisie à gauche */
+  padding-right: 41px; /* réduit la zone de saisie à droite */
+}
+
+input {
+  background: #ffff;
+  border: 1px solid rgba(68, 68, 68, 0.1); /* permet de définir une bordure */
+  /* épaisseur de la bordure | solid = ligne simple et continue | couleurs(R,G,B,opacité) */
+  color: #444;
+}
+
+.dark input {
+  background: #101010;
+  border: 1px solid rgb(25, 25, 25); /* permet de définir une bordure */
+  /* épaisseur de la bordure | solid = ligne simple et continue | couleurs(R,G,B,opacité) */
+  color: #ffffff;
+}
+
+#eye {
+  cursor: pointer; /* lorsque l'on passe notre curseur sur l'icône, il se transforme en "main" */
+  position: absolute; /* l'élément est retiré du flux normal et aucun espace n'est créé pour l'élément sur la page */
+  top: 50%; /* permet de centrer verticalement l'icône */
+  right: 15px; /* permet de décaler l'élément horizontalement en partant de la droite */
+  transform: translateY(
+    -50%
+  ); /* permet de redéfinir le centre au milieu de l'icône car par défaut il est au coin supérieur gauche */
+  color: #444;
+}
+
+.dark #eye {
+  color: #ffff;
+}
+
+input::placeholder {
+  /* modifie les placeholder des input */
+  opacity: 1; /* gérer l'opacité */
+  font-size: 15px;
+  color: rgba(68, 68, 68, 0.3); /* définit la couleur(R,G,B,opacité) */
+  color: rgba(68, 68, 68, 0.3); /* définit la couleur en RGB */
+  /* rouge | vert | bleu | opacité */
+}
+
+.dark input::placeholder {
+  color: rgba(255, 255, 255, 0.3); /* définit la couleur en RGB */
+  /* rouge | vert | bleu | opacité */
+}
+
+.access {
+  position: relative; /* L'élément est positionné dans le flux normal du document puis décalé, par rapport à lui-même */
+  /* Le décalage n'a pas d'impact sur la position des éléments */
+}
+
+button {
+  width: 350px; /* largeur */
+  height: 50px; /* hauteur */
+  background-color: #007eb4;
+  color: #ffffff;
+  border-radius: 10px; /* arrondi les bords de la box */
+  border: none; /* enlève la bordure dégueulasse par défaut */
+  font-weight: bold;
+  font-size: 16px;
+  box-sizing: border-box; /* définit la façon dont la hauteur et la largeur totale d'un élément est calculée */
+  /* ici, elles sont définies par rapport aux bordures de la box */
+  cursor: pointer; /* lorsque l'on passe notre curseur sur l'icône, il se transforme en "main" */
+  transition: background-color 200ms ease-in; /* permet de faire une transition lorsqu'il y a une action sur le bouton */
+  /* on précise qu'on veut modifier : la couleur d'arrière-plan | la durée de la transition : 200ms | on modifie l'accélération de la transition en "ease-in" */
+}
+
+button:hover {
+  /* lorsque la souris passe dessus, on fait : */
+  background-color: #005d92;
+}
+
+.fa-solid.fa-angle-right {
+  transform: translateY(
+    -50%
+  ); /* permet de redéfinir le centre au milieu de l'icône car par défaut il est au coin supérieur gauche */
+  position: absolute; /* l'élément est retiré du flux normal et aucun espace n'est créé pour l'élément sur la page */
+  top: 50%; /* permet de centrer verticalement l'icône */
+  right: 20px; /* permet de décaler l'élément horizontalement en partant de la droite */
+}
+
+.checkbox {
+  transform: scale(5); /* permet d'agrandir l'échelle (la taille) de la checkbox */
+  position: fixed; /* l'élément est fixe même si on scroll */
+  top: 50px; /* position par rapport au haut de la page */
+  right: 50px; /* position par rapport à la droite de la page */
+  cursor: pointer; /* lorsque l'on passe notre curseur sur l'icône, il se transforme en "main" */
+}
+
+@media screen and (max-width: 450px) {
+  /* à partit de 450px de large, on effectue les modifications ci-dessous */
+  .email input,
+  .password input,
+  button {
+    width: 100% !important;
+  }
+
+  .box {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  body {
+    padding-right: 15px !important; /* réduit la zone de saisie à droite */
+    padding-left: 15px !important; /* réduit la zone de saisie à gauche */
+  }
+}
+
+@media screen and (max-width: 320px) {
+  /* à partit de 320px de large, on effectue les modifications ci-dessous */
+  .fa-solid.fa-angle-right {
+    display: none; /* fait disparaître l'élément */
+  }
+}

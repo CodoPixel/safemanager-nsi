@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap");
+
+* {
+  font-family: "Nunito", sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background-color: #f5f7fb;
+}
+
+.dark {
+  background-color: #101010;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 30px;
+  background: #ffffff;
+}
+
+.dark .box {
+  background: #191919;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+  margin: 0 0 10px 0;
+  color: #444444;
+}
+
+.dark h1 {
+  color: #ffff;
+}
+
+p {
+  text-align: center;
+  font-weight: 300;
+  font-size: 18px;
+  color: #444;
+  margin: 0 0 20px 0;
+}
+
+.dark p {
+  color: #ffff;
+}
+
+a {
+  text-decoration: none;
+  color: #007eb4;
+}
+
+.email input {
+  width: 351px;
+  height: 50px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  display: block;
+  margin: 0 0 10px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.container-names {
+  display: flex;
+  justify-content: space-between;
+}
+
+.first-name input {
+  width: 167px;
+  height: 50px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  display: block;
+  margin: 0 0 10px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.family-name input {
+  width: 167px;
+  height: 50px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  display: block;
+  margin: 0 0 10px 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.password {
+  position: relative;
+}
+
+.password input {
+  width: 351px;
+  height: 50px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  display: block;
+  margin: 0 0 10px 0;
+  padding-left: 15px;
+  padding-right: 41px;
+}
+
+input {
+  background: #ffff;
+  border: 1px solid rgba(68, 68, 68, 0.1);
+  color: #444;
+}
+
+.dark input {
+  background: #101010;
+  border: 1px solid rgb(25, 25, 25);
+  color: #ffffff;
+}
+
+#eye {
+  cursor: pointer;
+  position: absolute;
+  top: 55%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #444;
+}
+
+.dark #eye {
+  color: #ffff;
+}
+
+input::placeholder {
+  opacity: 1;
+  font-size: 15px;
+  color: rgba(68, 68, 68, 0.3);
+}
+
+.dark input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.access {
+  position: relative;
+}
+
+button {
+  color: #ffffff;
+  width: 350px;
+  height: 50px;
+  background-color: #007eb4;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 200ms ease-in;
+}
+
+button:hover {
+  background-color: #005d92;
+}
+
+.fa-solid.fa-angle-right {
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  right: 20px;
+}
+
+.checkbox {
+  transform: scale(5);
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 450px) {
+  .email input,
+  .password input,
+  .family-name input,
+  .first-name input,
+  button {
+    width: 100% !important;
+  }
+
+  .container-names {
+    flex-direction: column;
+  }
+
+  .box {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  body {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .fa-solid.fa-angle-right {
+    display: none;
+  }
+}

@@ -16,7 +16,7 @@
     <title>SafeManager - Le logiciel en ligne pour gérer vos mots de passe</title>
   </head>
 
-  <body class="light">
+  <body>
     <div class="page">
       <header>
         <i class="fa-solid fa-lock"></i>
