@@ -17,7 +17,7 @@ class HtmlBuilder {
       <aside id="sidebar">
         <h1 class="appname">SafeManager</h1>
         <div class="sidebar-containerProfile">
-          <img alt="avatar" src="assets/private/default-avatar.png" />
+          <img alt="avatar" src="../assets/private/default-avatar.png" />
           <span>Bienvenue,</span>
           <h1>Thomas Gysemans</h1>
         </div>

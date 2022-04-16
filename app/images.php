@@ -1,5 +1,5 @@
 <?php
-require_once "class/HtmlBuilder.php";
+require_once "../class/HtmlBuilder.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -9,10 +9,10 @@ require_once "class/HtmlBuilder.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="styles/root.css">
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/sidebar.css">
-  <link rel="stylesheet" href="styles/images.css">
+  <link rel="stylesheet" href="../styles/root.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/sidebar.css">
+  <link rel="stylesheet" href="../styles/images.css">
   <title>SafeManager - Mes images</title>
 </head>
 <body class="dark">
@@ -28,23 +28,23 @@ require_once "class/HtmlBuilder.php";
       <div class="grid">
         <button class="container-image" type="button">
           <div class="image-overlay"></div>
-          <img src="assets/private/test-image.jpeg" alt="aucune description" />
+          <img src="../assets/private/test-image.jpeg" alt="aucune description" />
         </button>
         <button class="container-image" type="button">
           <div class="image-overlay"></div>
-          <img src="assets/private/test-image-2.jpeg" alt="aucune description" />
+          <img src="../assets/private/test-image-2.jpeg" alt="aucune description" />
         </button>
         <button class="container-image" type="button">
           <div class="image-overlay"></div>
-          <img src="assets/private/test-image.jpeg" alt="aucune description" />
+          <img src="../assets/private/test-image.jpeg" alt="aucune description" />
         </button>
         <button class="container-image" type="button">
           <div class="image-overlay"></div>
-          <img src="assets/private/test-image-2.jpeg" alt="aucune description" />
+          <img src="../assets/private/test-image-2.jpeg" alt="aucune description" />
         </button>
         <button class="container-image" type="button">
           <div class="image-overlay"></div>
-          <img src="assets/private/test-image.jpeg" alt="aucune description" />
+          <img src="../assets/private/test-image.jpeg" alt="aucune description" />
         </button>
       </div>
     </div>
@@ -54,12 +54,12 @@ require_once "class/HtmlBuilder.php";
     <button type="button" id="cross" title="Fermer la présentation"><i class="fa-solid fa-times"></i></button>  
     <button type="button" id="left" title="Image précédente"><i class="fa-solid fa-angle-left"></i></button>
     <div class="presentation-container-image">
-      <img src="assets/private/test-image.jpeg" alt="aucune description" id="preview-image" />
+      <img src="../assets/private/test-image.jpeg" alt="aucune description" id="preview-image" />
     </div>
     <button type="button" id="right" title="Image suivate"><i class="fa-solid fa-angle-right"></i></button>
   </div>
 
-  <script src="js/sidebar.js"></script>
-  <script src="js/image-presentation.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/image-presentation.js"></script>
 </body>
 </html>

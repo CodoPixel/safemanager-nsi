@@ -1,5 +1,5 @@
 <?php
-require_once "class/HtmlBuilder.php";
+require_once "../class/HtmlBuilder.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -9,10 +9,10 @@ require_once "class/HtmlBuilder.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="styles/root.css">
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/sidebar.css">
-  <link rel="stylesheet" href="styles/settings.css">
+  <link rel="stylesheet" href="../styles/root.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/sidebar.css">
+  <link rel="stylesheet" href="../styles/settings.css">
   <title>SafeManager - Paramètres</title>
 </head>
 <body class="dark">
@@ -28,7 +28,7 @@ require_once "class/HtmlBuilder.php";
             <div class="overlay-modify-image">
               <i class="fa-solid fa-camera-retro"></i>
             </div>
-            <img src="assets/private/default-avatar.png" alt="avatar" />
+            <img src="../assets/private/default-avatar.png" alt="avatar" />
           </button>
           <div class="personal-container-inputs">
             <input class="input" type="email" name="email" value="gysemansthomas@gmail.com" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
@@ -87,7 +87,7 @@ require_once "class/HtmlBuilder.php";
   <input type="hidden" name="streamer-mode" value="false">
   <input type="hidden" name="dark-mode" value="true">
 
-  <script src="js/sidebar.js"></script>
-  <script src="js/settings.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <script src="../js/settings.js"></script>
 </body>
 </html>

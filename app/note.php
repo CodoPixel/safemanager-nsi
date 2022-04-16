@@ -1,5 +1,5 @@
 <?php
-require_once "class/HtmlBuilder.php";
+require_once "../class/HtmlBuilder.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -9,10 +9,10 @@ require_once "class/HtmlBuilder.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="styles/root.css">
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/sidebar.css">
-  <link rel="stylesheet" href="styles/note.css">
+  <link rel="stylesheet" href="../styles/root.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/sidebar.css">
+  <link rel="stylesheet" href="../styles/note.css">
   <title>SafeManager - Ajouter une note</title>
 </head>
 <body class="dark">
@@ -46,7 +46,7 @@ require_once "class/HtmlBuilder.php";
     </div>
   </main>
 
-  <script src="js/select-label.js"></script>
-  <script src="js/sidebar.js"></script>
+  <script src="../js/select-label.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

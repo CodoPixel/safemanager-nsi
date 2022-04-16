@@ -1,5 +1,5 @@
 <?php
-require_once "class/HtmlBuilder.php";
+require_once "../class/HtmlBuilder.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -9,10 +9,10 @@ require_once "class/HtmlBuilder.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="styles/root.css">
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/sidebar.css">
-  <link rel="stylesheet" href="styles/password.css">
+  <link rel="stylesheet" href="../styles/root.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/sidebar.css">
+  <link rel="stylesheet" href="../styles/password.css">
   <title>SafeManager - Ajouter un mot de passe</title>
 </head>
 <body class="dark">
@@ -29,7 +29,7 @@ require_once "class/HtmlBuilder.php";
       </div>
       <form>
         <div class="container-maininfo">
-          <img src="assets/private/default-password.png" alt="logo" />
+          <img src="../assets/private/default-password.png" alt="logo" />
           <div class="container-maininputs">
             <input class="input" type="text" name="title" maxlength="255" spellcheck="false" autocomplete="off" required placeholder="Titre" />
             <input class="input" type="url" name="url" maxlength="255" spellcheck="false" autocomplete="off" placeholder="URL (facultatif)" />
