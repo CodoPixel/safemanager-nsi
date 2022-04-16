@@ -6,13 +6,14 @@ require_once "Client.php";
 class Auth {
   protected static $pdo;
   const VALID_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png"];
+  const ENCRYID_ALPHABET = "abdcefghijklmnopqrstuvwxyz1234567890";
+  const ENCRYID_LENGTH = 6;
 
   /**
    * Starts a connection between PHP and the database.
    * @throws PDOException
-   * @return PDO
    */
-  private static function init_pdo(): PDO {
+  private static function init_pdo() {
     if (!self::$pdo) {
       $dsn = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
       $username = "root";
@@ -23,8 +24,6 @@ class Auth {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
       ]);
     }
-
-    return self::$pdo;
   }
 
   public function register(string $email, string $password, string $firstname, string $lastname) {
@@ -60,7 +59,7 @@ class Auth {
   private function encryptUniqueID(): string {
       $unique_id = "";
       for ($i = 0; $i < self::ENCRYID_LENGTH; $i++) {
-          $unique_id .= self::ENCRYID_ALPHABET[random_int(0, mb_strlen(self::ENCRYD_ALPHABET) -1)];
+          $unique_id .= self::ENCRYID_ALPHABET[random_int(0, mb_strlen(self::ENCRYID_ALPHABET) -1)];
       }
       return $unique_id;
   }
