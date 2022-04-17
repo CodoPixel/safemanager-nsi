@@ -21,10 +21,10 @@
       <header>
         <i class="fa-solid fa-lock"></i>
         <nav>
-          <a style="text-decoration: none" href="index.html">Accueil</a>
-          <a style="text-decoration: none" href="index.html">Informations</a>
-          <a style="text-decoration: none" href="index.html">Générateur</a>
-          <a style="text-decoration: none" href="index.html">Compte</a>
+          <a href="/">Accueil</a>
+          <a href="infos/strength-intro.php">Informations</a>
+          <a href="index.html">Générateur</a>
+          <a href="index.html">Compte</a>
         </nav>
       </header>
       <div id="safemanager">
@@ -96,10 +96,9 @@
       <div class="footer-container" id="plan">
         <h3>Plan du site</h3>
         <ul>
-          <li><a id="lien" style="text-decoration: none" href="index.html">Accueil</a></li>
-          <li><a id="lien" style="text-decoration: none" href="index.html">Informations</a></li>
-          <li><a id="lien" style="text-decoration: none" href="index.html">Sécurité</a></li>
-          <li><a id="lien" style="text-decoration: none" href="index.html">Se Connecter</a></li>
+          <li><a id="lien" href="/">Accueil</a></li>
+          <li><a id="lien" href="infos/strength-intro.php">Informations</a></li>
+          <li><a id="lien" href="login.php">Se Connecter</a></li>
         </ul>
       </div>
       <div class="footer-container">
