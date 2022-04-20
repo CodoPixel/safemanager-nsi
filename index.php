@@ -1,3 +1,6 @@
+<?php
+require_once 'class/HtmlBuilder.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -11,6 +14,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="styles/root.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/circularProgressBar.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/generatePasswordModal.css">
+    <link rel="stylesheet" href="styles/testPasswordModal.css">
     <link rel="stylesheet" href="styles/homepage.css" />
     <meta name="robots" content="noindex, nofollow" />
     <title>SafeManager - Le logiciel en ligne pour gérer vos mots de passe</title>
@@ -23,8 +32,8 @@
         <nav>
           <a href="/">Accueil</a>
           <a href="infos/strength-intro.php">Informations</a>
-          <a href="index.html">Générateur</a>
-          <a href="index.html">Compte</a>
+          <a onclick="openGeneratePasswordModal()">Générateur</a>
+          <a href="login.php">Compte</a>
         </nav>
       </header>
       <div id="safemanager">
@@ -33,7 +42,7 @@
         concernant vos mots de passes. Evaluez la force de votre mot de passe, créez-en un
         aléatoirement, triez, classez etc. Venez surfer sur notre site web, mais attention 🤪
         n'oubliez pas votre planche !
-        <button id="test">Tester votre mot de passe</button>
+        <button id="test" onclick="openTestPasswordModal()">Tester votre mot de passe</button>
         <button id="savoir">En savoir plus</button>
       </div>
       <img id="guy" src="assets/private/security.svg" />
@@ -77,8 +86,8 @@
         </section>
         <footer>
           <p id="passwordsecure">Un vrai&nbsp;<span id="blue">mot de passe sécurisé</span></p>
-          <button id="generate">Générer</button>
-          <button id="testyour">Tester le vôtre</button>
+          <button id="generate" onclick="openGeneratePasswordModal()">Générer</button>
+          <button id="testyour" onclick="openTestPasswordModal()">Tester le vôtre</button>
         </footer>
       </div>
     </div>
@@ -111,5 +120,24 @@
         </ul>
       </div>
     </div>
+
+    <?= HtmlBuilder::modalGeneratePassword() ?>
+
+    <?= HtmlBuilder::modalTestPassword() ?>
+
+    <script src="js/ModalHandler.js"></script>
+    <script src="js/calcScoreOfPassword.js"></script>
+    <script src="js/circularProgressBarHandler.js"></script>
+    <script src="js/generatePasswordModal.js"></script>
+    <script src="js/testPasswordModal.js"></script>
+    <script>
+      function openGeneratePasswordModal() {
+        window.ModalHandler.open('#modal-generate-password');
+      }
+
+      function openTestPasswordModal() {
+        window.ModalHandler.open('#modal-test-password');
+      }
+    </script>
   </body>
 </html>

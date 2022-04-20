@@ -5,6 +5,7 @@
   --red-color-hover: #993737;
   --main-color: rgb(0, 126, 180);
   --main-color-light100: rgba(0, 126, 180, 0.1);
+  --main-color-light200: rgba(0, 126, 180, 0.2);
   --main-color-hover: rgb(0, 87, 124);
   --common-box-shadow: 2px 2px 8px rgba(68, 68, 68, 0.2);
   --common-border: 1px solid rgba(68, 68, 68, 0.2);

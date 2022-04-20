@@ -83,12 +83,14 @@ header {
   justify-content: space-between;
   font-weight: normal;
 }
-i {
+header i {
   color: #007eb4;
   font-size: 25px;
 }
 a {
   color: #444;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .dark a {
   color: white;
@@ -176,8 +178,6 @@ section div {
 }
 footer {
   border-top: 1px solid #444444;
-  padding-right: 100px;
-  padding-left: 100px;
   margin-top: 100px;
   display: flex;
   flex-direction: column;

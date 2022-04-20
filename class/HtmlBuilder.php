@@ -73,4 +73,100 @@ class HtmlBuilder {
       </header>
     HTML;
   }
+
+  public static function circularProgressBar(string $initialContent = '0%'):string {
+    return <<<HTML
+      <div class="container">
+        <div class="circular-progress">
+          <div class="value-container">
+            ${initialContent}
+          </div>
+        </div>
+      </div>
+    HTML;
+  }
+
+  public static function modalGeneratePassword():string {
+    $progressBar = self::circularProgressBar('0');
+
+    return <<<HTML
+      <div id="modal-generate-password" class="modal" role="dialog" aria-hidden="true" aria-modal="true" aria-labelledby="modal-generatepassword-title">
+          <!-- The wrapper is not the "white thing" -->
+          <div class="modal-wrapper">
+              <!-- add .modal-close-right if this is a small box -->
+              <button type="button" class="modal-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
+
+              <!-- The white thing -->
+              <div class="modal-content">
+                <!-- Put an ID here -->
+                <h1 id="modal-generatepassword-title">Générer un mot de passe</h1>
+                <div class="container-generatepassword">
+                  <div class="container-generatepassword-modal-progressbar">
+                    ${progressBar}
+                  </div>
+                  <div class="container-generatepassword-modal-config" id="generatepassword-config">
+                    <div class="generatepassword-config" id="generatepassword-config-memorable">
+                      <input type="checkbox" id="memorable">
+                      <label for="memorable">Mémorable</label>
+                    </div>
+                    <div class="generatepassword-config" id="generatepassword-config-length">
+                      <input type="checkbox" id="checkbox-custom-length">
+                      <label for="checkbox-custom-length">Longueur personnalisée</label>
+                      <div class="generatepassword-set-length disabled-input">
+                        <label for="modal-password-length">Longueur du mot de passe :</label>
+                        <input type="number" id="modal-password-length" value="20" min="6" max="255" readonly>
+                      </div>
+                    </div>
+                    <div class="generatepassword-config" id="generatepassword-config-specialchars">
+                      <input type="checkbox" id="special-characters" checked>
+                      <label for="special-characters">Caractères spéciaux</label>
+                    </div>
+                    <div class="generatepassword-config" id="generatepassword-config-maj">
+                      <input type="checkbox" id="maj" checked>
+                      <label for="maj">Lettres majuscules</label>
+                    </div>
+                    <div class="generatepassword-config" id="generatepassword-config-numbers">
+                      <input type="checkbox" id="numbers" checked>
+                      <label for="numbers">Chiffres</label>
+                    </div>
+                  </div>
+                </div>
+                <span id="explanatory-password"></span>
+                <div class="generatepassword-controls">
+                  <input id="generated-password-input" placeholder="Mot de passe généré" type="text" maxlength="255" spellcheck="false" autocomplete="off">
+                  <button class="button-material" id="generatepassword-button" type="button">Générer</button>
+                  <button class="button-material" id="copy-button" type="button"><i class="fa-regular fa-copy"></i></button>
+                </div>
+              </div>
+          </div>
+      </div>
+    HTML;
+  }
+
+  public static function modalTestPassword():string {
+    $progressBar = self::circularProgressBar('0');
+
+    return <<<HTML
+      <div id="modal-test-password" class="modal" role="dialog" aria-hidden="true" aria-modal="true" aria-labelledby="modal-test-title">
+          <!-- The wrapper is not the "white thing" -->
+          <div class="modal-wrapper">
+              <!-- add .modal-close-right if this is a small box -->
+              <button type="button" class="modal-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
+
+              <!-- The white thing -->
+              <div class="modal-content">
+                <!-- Put an ID here -->
+                <h1 id="modal-test-title">Tester un mot de passe</h1>
+                <div class="testpassword-controls">
+                  <input id="tested-password-input" placeholder="Le mot de passe" type="text" maxlength="255" spellcheck="false" autocomplete="off">
+                  <button class="button-material" id="testpassword-button" type="button">Tester</button>
+                </div>
+                <div class="container-testpassword-modal-progressbar">
+                  ${progressBar}
+                </div>
+              </div>
+          </div>
+      </div>
+    HTML;
+  }
 }

@@ -241,6 +241,34 @@ main {
   background-color: var(--red-color-hover);
 }
 
+.button-material {
+  display: block;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--main-color-light100);
+  height: 50px;
+  max-width: 220px;
+  width: 100%;
+  font-size: 1.1em;
+  transition: background-color 200ms ease;
+}
+
+.button-material,
+.button-material * {
+  color: var(--main-color);
+}
+
+.button-material:hover,
+.button-material:focus {
+  background-color: var(--main-color-light200);
+}
+
+.button-material:focus {
+  outline: 2px solid var(--main-color);
+}
+
 /*
 *
 * labels
