@@ -1,55 +1,127 @@
-(function () {
-  const configContainer = document.querySelector("#generatepassword-config") as HTMLDivElement;
-  const generateButton = document.querySelector("#generatepassword-button") as HTMLButtonElement;
-  const copyButton = document.querySelector("#copy-button") as HTMLButtonElement;
-  const inputMemorable = document.querySelector("#memorable") as HTMLInputElement;
-  const elementSpecialCharacters = document.querySelector(
+class GeneratePasswordModal {
+  public configContainer = document.querySelector("#generatepassword-config") as HTMLDivElement;
+  public generateButton = document.querySelector("#generatepassword-button") as HTMLButtonElement;
+  public copyButton = document.querySelector("#copy-button") as HTMLButtonElement;
+  public inputMemorable = document.querySelector("#memorable") as HTMLInputElement;
+  public elementSpecialCharacters = document.querySelector(
     "#generatepassword-config-specialchars"
   ) as HTMLDivElement;
-  const elementMaj = document.querySelector("#generatepassword-config-maj") as HTMLDivElement;
-  const elementNumbers = document.querySelector(
+  public elementMaj = document.querySelector("#generatepassword-config-maj") as HTMLDivElement;
+  public elementNumbers = document.querySelector(
     "#generatepassword-config-numbers"
   ) as HTMLDivElement;
-  const elementCustomLength = document.querySelector(
+  public elementCustomLength = document.querySelector(
     "#generatepassword-config-length"
   ) as HTMLDivElement;
-  const containerInputCustomLength = elementCustomLength.querySelector(
+  public containerInputCustomLength = this.elementCustomLength.querySelector(
     ".generatepassword-set-length"
   ) as HTMLDivElement;
-  const checkboxCustomLength = document.querySelector(
+  public checkboxCustomLength = document.querySelector(
     "#checkbox-custom-length"
   ) as HTMLInputElement;
-  const inputCustomLength = document.querySelector("#modal-password-length") as HTMLInputElement;
-  const inputPassword = document.querySelector("#generated-password-input") as HTMLInputElement;
-  const explanatorySentence = document.querySelector("#explanatory-password") as HTMLSpanElement;
-  const progressBar = document.querySelector(
+  public inputCustomLength = document.querySelector("#modal-password-length") as HTMLInputElement;
+  public inputPassword = document.querySelector("#generated-password-input") as HTMLInputElement;
+  public explanatorySentence = document.querySelector("#explanatory-password") as HTMLSpanElement;
+  public progressBar = document.querySelector(
     ".container-generatepassword-modal-progressbar .circular-progress"
   ) as HTMLDivElement;
 
-  if (configContainer == null) {
-    throw new Error("The modal does not exist.");
+  protected onGeneration?: (password: GeneratedPassword) => void;
+  protected onCopy?: (copiedText: string) => void;
+
+  constructor(options?: GenerationConfig) {
+    this.onGeneration = options?.onGeneration;
+    this.onCopy = options?.onCopy;
+
+    if (this.configContainer == null) {
+      throw new Error("The modal does not exist.");
+    }
+
+    this.inputMemorable.onchange = () => {
+      const elementsToCheck = [this.elementMaj, this.elementNumbers, this.elementSpecialCharacters];
+      const elementsToToggle = elementsToCheck.concat(this.elementCustomLength);
+      if (this.inputMemorable.checked) {
+        this.setElements(elementsToToggle, "disabled");
+        this.checkElements(elementsToCheck);
+        this.uncheckElement(this.elementCustomLength);
+        this.disableInputForCustomLength();
+      } else {
+        this.setElements(elementsToToggle, "enabled");
+      }
+      this.resetExplanatoryText();
+    };
+
+    this.checkboxCustomLength.onchange = () => {
+      if (this.checkboxCustomLength.checked) {
+        this.enableInputForCustomLength();
+      } else {
+        this.disableInputForCustomLength();
+      }
+    };
+
+    this.generateButton.onclick = async () => {
+      this.startLoading();
+      try {
+        const config = this.buildConfig();
+        const result = await this.generatePassword(config);
+        const score = calcScoreOf(result);
+        this.resetExplanatoryText();
+        animateProgressBar(null, score * 10, 5, true, this.progressBar);
+        this.displayPassword(result);
+        this.onGeneration?.(result);
+      } catch (e) {
+        this.displayError((e as Error).message);
+      } finally {
+        this.stopLoading();
+      }
+    };
+
+    this.copyButton.onclick = () => {
+      this.copyText(this.inputPassword.value);
+      this.onCopy?.(this.inputPassword.value);
+      this.copyButton.setAttribute("disabled", "");
+      const icon = this.copyButton.querySelector("i") as HTMLElement;
+      this.copyButton.innerHTML = "Copié";
+      setTimeout(() => {
+        this.copyButton.textContent = "";
+        this.copyButton.appendChild(icon);
+        this.copyButton.removeAttribute("disabled");
+      }, 1500);
+    };
   }
 
-  function disableInputForCustomLength() {
-    inputCustomLength.setAttribute("readonly", "");
-    containerInputCustomLength.classList.add("disabled-input");
+  public open() {
+    if ((window as any).ModalHandler == undefined) {
+      throw new Error("There is no handler for the modal.");
+    }
+
+    (window as any).ModalHandler.open("#modal-generate-password");
   }
 
-  function enableInputForCustomLength() {
-    inputCustomLength.removeAttribute("readonly");
-    containerInputCustomLength.classList.remove("disabled-input");
+  public copyText(text: string) {
+    navigator.clipboard.writeText(text);
   }
 
-  function isCustomLengthEnabled() {
-    return !inputCustomLength.hasAttribute("readonly");
+  public disableInputForCustomLength() {
+    this.inputCustomLength.setAttribute("readonly", "");
+    this.containerInputCustomLength.classList.add("disabled-input");
   }
 
-  function getCheckboxOf(element: HTMLDivElement) {
+  public enableInputForCustomLength() {
+    this.inputCustomLength.removeAttribute("readonly");
+    this.containerInputCustomLength.classList.remove("disabled-input");
+  }
+
+  public isCustomLengthEnabled() {
+    return !this.inputCustomLength.hasAttribute("readonly");
+  }
+
+  public getCheckboxOf(element: HTMLDivElement) {
     return element.querySelector('input[type="checkbox"]') as HTMLInputElement;
   }
 
-  function setElement(element: HTMLDivElement, status: "disabled" | "enabled") {
-    const input = getCheckboxOf(element);
+  public setElement(element: HTMLDivElement, status: "disabled" | "enabled") {
+    const input = this.getCheckboxOf(element);
     switch (status) {
       case "disabled":
         input.setAttribute("disabled", "");
@@ -61,59 +133,37 @@
     }
   }
 
-  function setElements(elements: HTMLDivElement[], status: "disabled" | "enabled") {
+  public setElements(elements: HTMLDivElement[], status: "disabled" | "enabled") {
     for (let el of elements) {
-      setElement(el, status);
+      this.setElement(el, status);
     }
   }
 
-  function checkElement(element: HTMLDivElement) {
-    let input = getCheckboxOf(element);
+  public checkElement(element: HTMLDivElement) {
+    let input = this.getCheckboxOf(element);
     input.checked = true;
   }
 
-  function checkElements(elements: HTMLDivElement[]) {
+  public checkElements(elements: HTMLDivElement[]) {
     for (let el of elements) {
-      checkElement(el);
+      this.checkElement(el);
     }
   }
 
-  function uncheckElement(element: HTMLDivElement) {
-    let input = getCheckboxOf(element);
+  public uncheckElement(element: HTMLDivElement) {
+    let input = this.getCheckboxOf(element);
     input.checked = false;
   }
 
-  inputMemorable.onchange = () => {
-    const elementsToCheck = [elementMaj, elementNumbers, elementSpecialCharacters];
-    const elementsToToggle = elementsToCheck.concat(elementCustomLength);
-    if (inputMemorable.checked) {
-      setElements(elementsToToggle, "disabled");
-      checkElements(elementsToCheck);
-      uncheckElement(elementCustomLength);
-      disableInputForCustomLength();
-    } else {
-      setElements(elementsToToggle, "enabled");
-    }
-    resetExplanatoryText();
-  };
-
-  checkboxCustomLength.onchange = () => {
-    if (checkboxCustomLength.checked) {
-      enableInputForCustomLength();
-    } else {
-      disableInputForCustomLength();
-    }
-  };
-
-  function buildConfig() {
+  public buildConfig() {
     const config: PasswordGenerationConfig = {
-      memorable: inputMemorable.checked,
-      specialCharacters: getCheckboxOf(elementSpecialCharacters).checked,
-      maj: getCheckboxOf(elementMaj).checked,
-      numbers: getCheckboxOf(elementNumbers).checked,
+      memorable: this.inputMemorable.checked,
+      specialCharacters: this.getCheckboxOf(this.elementSpecialCharacters).checked,
+      maj: this.getCheckboxOf(this.elementMaj).checked,
+      numbers: this.getCheckboxOf(this.elementNumbers).checked,
     };
-    if (isCustomLengthEnabled()) {
-      const customLength = parseInt(inputCustomLength.value, 10);
+    if (this.isCustomLengthEnabled()) {
+      const customLength = parseInt(this.inputCustomLength.value, 10);
       if (customLength > 255) {
         throw new Error("Wow, mot de passe trop long !");
       } else if (customLength <= 0) {
@@ -124,17 +174,17 @@
     return config;
   }
 
-  function startLoading() {
-    generateButton.textContent = "Chargement...";
-    generateButton.setAttribute("disabled", "");
+  public startLoading() {
+    this.generateButton.textContent = "Chargement...";
+    this.generateButton.setAttribute("disabled", "");
   }
 
-  function stopLoading() {
-    generateButton.textContent = "Générer";
-    generateButton.removeAttribute("disabled");
+  public stopLoading() {
+    this.generateButton.textContent = "Générer";
+    this.generateButton.removeAttribute("disabled");
   }
 
-  function displayExplanatoryTextOfPasswordIfNeeded(result: GeneratedPassword) {
+  public displayExplanatoryTextOfPasswordIfNeeded(result: GeneratedPassword) {
     if (result.words) {
       let sentence = "Composé des mots";
       for (let i = 0; i < result.words.length; i++) {
@@ -145,54 +195,22 @@
           sentence += ` "${word}", `;
         }
       }
-      explanatorySentence.textContent = sentence;
+      this.explanatorySentence.textContent = sentence;
     }
   }
 
-  function displayError(error: string) {
-    explanatorySentence.textContent = error;
+  public displayError(error: string) {
+    this.explanatorySentence.textContent = error;
   }
 
-  function resetExplanatoryText() {
-    explanatorySentence.textContent = "";
+  public resetExplanatoryText() {
+    this.explanatorySentence.textContent = "";
   }
 
-  function displayPassword(result: GeneratedPassword) {
-    displayExplanatoryTextOfPasswordIfNeeded(result);
-    inputPassword.value = result.plainPassword;
+  public displayPassword(result: GeneratedPassword) {
+    this.displayExplanatoryTextOfPasswordIfNeeded(result);
+    this.inputPassword.value = result.plainPassword;
   }
-
-  generateButton.onclick = async () => {
-    startLoading();
-    try {
-      const config = buildConfig();
-      const result = await generatePassword(config);
-      const score = calcScoreOf(result);
-      resetExplanatoryText();
-      animateProgressBar(null, score * 10, 5, true, progressBar);
-      displayPassword(result);
-    } catch (e) {
-      displayError((e as Error).message);
-    } finally {
-      stopLoading();
-    }
-  };
-
-  function copyText(text: string) {
-    navigator.clipboard.writeText(text);
-  }
-
-  copyButton.onclick = () => {
-    copyText(inputPassword.value);
-    copyButton.setAttribute("disabled", "");
-    const icon = copyButton.querySelector("i") as HTMLElement;
-    copyButton.innerHTML = "Copié";
-    setTimeout(() => {
-      copyButton.textContent = "";
-      copyButton.appendChild(icon);
-      copyButton.removeAttribute("disabled");
-    }, 1500);
-  };
 
   /**
    * Generates a pseudo-random integer.
@@ -200,13 +218,13 @@
    * @param max The maximum value (excluded)
    * @returns A random integer in the interval [min;max[
    */
-  function generateRandomInteger(min: number, max: number): number {
+  public generateRandomInteger(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  async function generatePassword(config: PasswordGenerationConfig): Promise<GeneratedPassword> {
+  public async generatePassword(config: PasswordGenerationConfig): Promise<GeneratedPassword> {
     config.length ??= 20;
     let password = "";
 
@@ -217,12 +235,12 @@
     ].filter((v) => v !== true) as string[];
     if (!config.memorable) {
       for (let i = 0; i < config.length; i++) {
-        const randomAlphaIndex = generateRandomInteger(0, possibilites.length + 1);
+        const randomAlphaIndex = this.generateRandomInteger(0, possibilites.length + 1);
         if (randomAlphaIndex === possibilites.length) {
-          const randomCharacterIndex = generateRandomInteger(0, minAlpha.length);
+          const randomCharacterIndex = this.generateRandomInteger(0, minAlpha.length);
           password += minAlpha[randomCharacterIndex];
         } else {
-          const randomCharacterIndex = generateRandomInteger(
+          const randomCharacterIndex = this.generateRandomInteger(
             0,
             possibilites[randomAlphaIndex].length
           );
@@ -232,10 +250,14 @@
     } else {
       const words = [];
       for (let i = 0; i < 3; i++) {
-        const chosenLetter = minAlpha[generateRandomInteger(0, minAlpha.length)];
-        const query = await fetch("dict/" + chosenLetter + ".txt", { method: "GET" });
+        const chosenLetter = minAlpha[this.generateRandomInteger(0, minAlpha.length)];
+        const dictFile =
+          window.location.href.indexOf("http://localhost:8888") < 0
+            ? "/dict/" + chosenLetter + ".txt"
+            : "/safemanager-nsi/dict/" + chosenLetter + ".txt";
+        const query = await fetch(dictFile, { method: "GET" });
         const responseText = await query.text();
-        const randomIndex = generateRandomInteger(0, responseText.length);
+        const randomIndex = this.generateRandomInteger(0, responseText.length);
         const beginningIndexOfNextWord = responseText.substring(randomIndex).indexOf("\n");
         let word: string;
         if (beginningIndexOfNextWord < 0) {
@@ -255,7 +277,7 @@
         }
         words.push(word);
       }
-      return {
+      const generationConfig = {
         plainPassword: password,
         words,
         usedWithConfig: {
@@ -266,7 +288,8 @@
           specialCharacters: false,
         },
       };
+      return generationConfig;
     }
     return { plainPassword: password, usedWithConfig: config };
   }
-})();
+}

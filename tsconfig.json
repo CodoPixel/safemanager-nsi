@@ -6,6 +6,6 @@
     "lib": ["DOM", "ES2017"],
     "removeComments": false
   },
-  "include": ["./ts/*.ts", "./declarations.d.ts"],
+  "include": ["./ts/*.ts", "./declarations.d.ts", "./ts/app/*.ts"],
   "exclude": ["./node_modules/"]
 }

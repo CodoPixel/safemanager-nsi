@@ -1,3 +1,25 @@
+<?php
+require_once 'class/Auth.php';
+require_once 'class/HtmlBuilder.php';
+AuthHelper::mustBeNotConnected("index.php");
+
+$errorMessage = null;
+try {
+  if (!empty($_POST)) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $auth = new Auth();
+    $auth->loginWithCredentials($email, $password);
+
+    header("Location: app/index.php");
+  }
+} catch (PDOException $e) {
+  die("Une erreur fatale est survenue.");
+} catch (Exception $e) {
+  $errorMessage = $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -14,10 +36,12 @@
     />
     <meta name="robots" content="noindex, nofollow" />
     <title>SafeManager - Se connecter</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless@5/borderless.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   </head>
   <body>
     <div class="box">
-      <form method="POST" action="sql/login.php">
+      <form method="POST">
         <h1>Se connecter</h1>
         <p>
           Vous n'avez pas de compte ?
@@ -25,7 +49,7 @@
         </p>
 
         <div class="email">
-          <input type="email" id="mail" name="email" placeholder="Adresse email" required />
+          <input type="email" id="mail" name="email" placeholder="Adresse email" value="<?= htmlentities($_POST['email'] ?? '') ?>" required />
         </div>
 
         <div class="password">
@@ -48,5 +72,6 @@
       </form>
     </div>
     <script src="js/logging.js"></script>
+    <?= HtmlBuilder::handleErrorMessage($errorMessage, null) ?>
   </body>
 </html>

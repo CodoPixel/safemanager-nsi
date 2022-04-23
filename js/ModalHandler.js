@@ -124,7 +124,7 @@
                     }
                 }
             };
-            this.current_modal.onkeydown = (e) => {
+            document.onkeydown = (e) => {
                 this._handleKeyboardSupport(e);
             };
             const closebutton = this.current_modal.querySelector(".modal-close");

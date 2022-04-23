@@ -142,7 +142,7 @@
         }
       };
 
-      this.current_modal.onkeydown = (e: KeyboardEvent) => {
+      document.onkeydown = (e: KeyboardEvent) => {
         this._handleKeyboardSupport(e);
       };
 

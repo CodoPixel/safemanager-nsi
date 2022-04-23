@@ -169,4 +169,24 @@ class HtmlBuilder {
       </div>
     HTML;
   }
+
+  public static function handleErrorMessage(?string $errorMessage, ?string $redirection):string {
+    if ($errorMessage === null) {
+      return "";
+    }
+
+    $then = $redirection == null ? '' : <<<HTML
+      .then(()=>window.location.href='$redirection');
+    HTML;
+
+    return <<<HTML
+      <script>
+        try {
+          Swal.fire("Erreur !", `$errorMessage`, "error")$then
+        } catch (e) {
+          console.error("Une erreur est survenue mais n'a pas pu être affichée correctement.");
+        }
+      </script>
+    HTML;
+  }
 }

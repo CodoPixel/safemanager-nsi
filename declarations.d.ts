@@ -17,3 +17,8 @@ interface DuplicatedInfo {
   iterations: number[];
   score: number;
 }
+
+interface GenerationConfig {
+  onGeneration?: (password: GeneratedPassword) => void;
+  onCopy?: (copiedText: string) => void;
+}

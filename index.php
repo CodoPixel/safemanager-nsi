@@ -1,5 +1,6 @@
 <?php
 require_once 'class/HtmlBuilder.php';
+require_once 'class/Auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -22,6 +23,8 @@ require_once 'class/HtmlBuilder.php';
     <link rel="stylesheet" href="styles/testPasswordModal.css">
     <link rel="stylesheet" href="styles/homepage.css" />
     <meta name="robots" content="noindex, nofollow" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless@5/borderless.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <title>SafeManager - Le logiciel en ligne pour gérer vos mots de passe</title>
   </head>
 
@@ -33,7 +36,11 @@ require_once 'class/HtmlBuilder.php';
           <a href="/">Accueil</a>
           <a href="infos/strength-intro.php">Informations</a>
           <a onclick="openGeneratePasswordModal()">Générateur</a>
-          <a href="login.php">Compte</a>
+          <?php if (AuthHelper::isConnected() != null): ?>
+            <a href="app/index.php">Application</a>
+          <?php else: ?>
+            <a href="login.php">Compte</a>
+          <?php endif; ?>
         </nav>
       </header>
       <div id="safemanager">
@@ -131,8 +138,9 @@ require_once 'class/HtmlBuilder.php';
     <script src="js/generatePasswordModal.js"></script>
     <script src="js/testPasswordModal.js"></script>
     <script>
+      const modalForGeneration = new GeneratePasswordModal();
       function openGeneratePasswordModal() {
-        window.ModalHandler.open('#modal-generate-password');
+        modalForGeneration.open();
       }
 
       function openTestPasswordModal() {

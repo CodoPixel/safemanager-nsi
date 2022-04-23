@@ -1,5 +1,7 @@
 <?php
 require_once "../class/HtmlBuilder.php";
+require_once "../class/Auth.php";
+AuthHelper::mustBeConnected("../index.php");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,6 +15,8 @@ require_once "../class/HtmlBuilder.php";
   <link rel="stylesheet" href="../styles/main.css">
   <link rel="stylesheet" href="../styles/sidebar.css">
   <link rel="stylesheet" href="../styles/images.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless@5/borderless.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Mes images</title>
 </head>
 <body class="dark">

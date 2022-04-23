@@ -1,3 +1,26 @@
+<?php
+require_once "class/Auth.php";
+AuthHelper::mustBeNotConnected("index.php");
+
+$errorMessage = null;
+try {
+  if (!empty($_POST)) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $firstname = $_POST["firstname"];
+    $lastname = $_POST["lastname"];
+
+    $auth = new Auth();
+    $auth->register($email, $password, $firstname, $lastname);
+
+    header("Location: app/index.php");
+  }
+} catch (PDOException $e) {
+  die("Une erreur fatale est survenue.");
+} catch (Exception $e) {
+  $errorMessage = $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -14,13 +37,15 @@
     />
     <meta name="robots" content="noindex, nofollow" />
     <title>SafeManager - S'inscrire</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless@5/borderless.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   </head>
   <body>
     <div class="box">
-      <form method="POST" action="sql/register.php">
+      <form method="POST">
         <h1>S'inscrire</h1>
         <p>
-          Vous avez déjà un compte ? <a href="connexion.php" title="Se connecter">Se connecter</a>
+          Vous avez déjà un compte ? <a href="login.php" title="Se connecter">Se connecter</a>
         </p>
 
         <div class="email">
@@ -29,10 +54,10 @@
 
         <div class="container-names">
           <div class="first-name">
-            <input name="firstname" type="text" id="name" placeholder="Prénom" required />
+            <input name="firstname" type="text" id="name" placeholder="Prénom" value="<?= htmlentities($_POST['firstname'] ?? '') ?>" required />
           </div>
           <div class="family-name">
-            <input name="lastname" type="text" id="family-name" placeholder="Nom" required />
+            <input name="lastname" type="text" id="family-name" placeholder="Nom" value="<?= htmlentities($_POST['lastname'] ?? '') ?>" required />
           </div>
         </div>
 
@@ -42,6 +67,7 @@
             type="password"
             id="password"
             placeholder="Mot de passe"
+            value="<?= htmlentities($_POST['email'] ?? '') ?>"
             required
           />
           <i id="eye" class="fa-solid fa-eye" onclick="togglePasswordType()"></i>
