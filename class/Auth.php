@@ -45,23 +45,28 @@ class Auth {
 
   /**
    * Creates a new user in the database with the given credentials.
+   * @param string $email The given email address
+   * @param string $password The password of length [6, 255[
+   * @param string $firstname The first name
+   * @param string $lastname The last name
    */
-  public function register(string $email, string $password, string $firstname, string $lastname):void {
+  public function register(string $email, string $password, string $firstname, string $lastname) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       throw new ClientException("Email fausse");
     }
 
+    $uniqueID = $this->encryptUniqueID();
     $query = self::$pdo->prepare("INSERT INTO client (email, clientID, firstname, lastname, password, registrationDate) VALUES (:email, :clientID, :firstname, :lastname, :password, :date)");
     $query->execute([
       "email" => $email,
-      "clientID" => "abcdef",
+      "clientID" => $uniqueID,
       "firstname" => $firstname,
       "lastname" => $lastname,
       "password" => password_hash($password, PASSWORD_BCRYPT),
       "date" => (new DateTime())->getTimestamp()
     ]);
 
-    $_SESSION["clientID"] = $this->encryptUniqueID();
+    $_SESSION["clientID"] = $uniqueID;
   }
 
   /**
@@ -117,6 +122,78 @@ class Auth {
     } else {
       throw new ClientException("Cet utilisateur n'existe pas.");
     }
+  }
+
+  /**
+   * Checks whether the data sent by the user is valid to be saved in the database.
+   * The password is not mandatory (because they user may not want to change it).
+   * However, if it's been given by the javascript algorithm, then we must check its validity.
+   */
+  public function isValidClientDataForProfilUpdate($data):bool {
+    return $data["email"] != null &&
+      $data["streamerMode"] != null &&
+      $data["darkMode"] != null &&
+      $data["firstname"] != null &&
+      $data["lastname"] != null &&
+      $data["password"] != null ?
+        (mb_strlen($data["password"]) >= 6 &&
+        mb_strlen($data["password"]) < 255 &&
+        !ctype_space($data["password"])) : true &&
+      ($data["darkMode"] === "true" || $data["darkMode"] === "false") &&
+      ($data["streamerMode"] === "true" || $data["streamerMode"] === "false") &&
+      filter_var(trim($data["email"]), FILTER_VALIDATE_EMAIL) &&
+      strlen(trim($data["email"])) < 255 &&
+      mb_strlen(trim($data["firstname"])) < 255 &&
+      mb_strlen(trim($data["lastname"])) < 255 &&
+      !empty(trim($data["email"])) &&
+      !empty(trim($data["firstname"])) &&
+      !empty(trim($data["lastname"]));
+  }
+
+  /**
+   * Saves new profil for currently logged in user.
+   * @throws ClientException
+   */
+  public function saveProfil($data) {
+    $client = $this->getClient();
+    if (!$this->isValidClientDataForProfilUpdate($data)) {
+      throw new ClientException("Données invalides");
+    }
+    $newData = [
+      "clientID" => $client->getClientID(),
+      "email" => trim($data["email"]),
+      "firstname" => trim($data["firstname"]),
+      "lastname" => trim($data["lastname"]),
+      "streamerMode" => $data["streamerMode"] === "true" ? 1 : 0,
+      "darkMode" => $data["darkMode"] === "true" ? 1 : 0
+    ];
+    if ($data["password"] != null) {
+      $newData["password"] = password_hash($data["password"], PASSWORD_BCRYPT);
+      $query = self::$pdo->prepare("UPDATE client SET email=:email, password=:password, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode WHERE clientID=:clientID");
+    } else {
+      $query = self::$pdo->prepare("UPDATE client SET email=:email, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode WHERE clientID=:clientID");
+    }
+    $query->execute($newData);
+  }
+
+  /**
+   * Deletes the account of the currently logged in user.
+   * @throws ClientException
+   */
+  public function deleteAccount() {
+    $client = $this->getClient();
+    $data = ["clientID" => $client->getClientID()];
+    $clientQuery = self::$pdo->prepare("DELETE FROM client WHERE clientID=:clientID");
+    $imagesQuery = self::$pdo->prepare("DELETE FROM images WHERE clientID=:clientID");
+    $labelsQuery = self::$pdo->prepare("DELETE FROM labels WHERE clientID=:clientID");
+    $notesQuery  = self::$pdo->prepare("DELETE FROM notes  WHERE clientID=:clientID");
+    $passwordsQuery = self::$pdo->prepare("DELETE FROM passwords WHERE clientID=:clientID");
+    $clientQuery->execute($data);
+    $imagesQuery->execute($data);
+    $labelsQuery->execute($data);
+    $notesQuery->execute($data);
+    $passwordsQuery->execute($data);
+    AuthHelper::logOut();
   }
 
   /**
@@ -307,7 +384,6 @@ class Auth {
       "color" => $color,
     ]);
     $label = $query->fetch();
-
     if ($label === false) {
       return false;
     } else {
@@ -385,6 +461,32 @@ class Auth {
     } else {
       return true;
     }
+  }
+
+  /**
+   * Gets the number of notes for the currently logged in user.
+   * @param ?Client $client The client if it has already been fetched from the database (for better performance).
+   * @return int
+   */
+  public function getNumberOfNotes(?Client $client): int {
+    $client = $client ?? $this->getClient();
+    $query = self::$pdo->prepare("SELECT COUNT(*) FROM notes WHERE clientID=:clientID");
+    $query->execute(["clientID" => $client->getClientID()]);
+    $numberOfNotes = (int)$query->fetchColumn();
+    return $numberOfNotes;
+  }
+
+  /**
+   * Gets the number of passwords for the currently logged in user.
+   * @param ?Client $client The client if it has already been fetched from the database (for better performance).
+   * @return int
+   */
+  public function getNumberOfPasswords(?Client $client): int {
+    $client = $client ?? $this->getClient();
+    $query = self::$pdo->prepare("SELECT COUNT(*) FROM passwords WHERE clientID=:clientID");
+    $query->execute(["clientID" => $client->getClientID()]);
+    $numberOfPasswords = (int)$query->fetchColumn();
+    return $numberOfPasswords;
   }
 
   /**

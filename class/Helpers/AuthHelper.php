@@ -21,6 +21,13 @@ class AuthHelper
     {
         return isset($_SESSION['clientID']);
     }
+
+    /**
+     * Logs out the user.
+     */
+    public static function logOut() {
+        session_destroy();
+    }
     
     /**
      * Redirects the user.

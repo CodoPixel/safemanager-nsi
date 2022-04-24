@@ -2,6 +2,23 @@
 require_once "../class/HtmlBuilder.php";
 require_once "../class/Auth.php";
 AuthHelper::mustBeConnected("../index.php");
+
+$client = null;
+$errorMessage = null;
+$isCriticalError = false;
+$numberOfNotes = 0;
+$numberOfPasswords = 0;
+try {
+  $auth = new Auth();
+  $client = $auth->getClient();
+  $numberOfNotes = $auth->getNumberOfNotes($client);
+  $numberOfPasswords = $auth->getNumberOfPasswords($client);
+} catch (ClientException $e) {
+  $errorMessage = $e->getMessage();
+} catch (Exception $e) {
+  $errorMessage = "Erreur serveur inconnue.";
+  $isCriticalError = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -25,6 +42,10 @@ AuthHelper::mustBeConnected("../index.php");
     <?= HtmlBuilder::header(true, null); ?>
     <div>
     <div class="content">
+      <div class="content-topbar">
+        <div></div>
+        <button class="button-primary" type="submit" style="width:200px;" onclick="save()">Sauvegarder le profil</button>
+      </div>
       <div class="container">
         <h2>Informations personnelles</h2>
         <div class="container-personal-info">
@@ -35,10 +56,10 @@ AuthHelper::mustBeConnected("../index.php");
             <img src="../assets/private/default-avatar.png" alt="avatar" />
           </button>
           <div class="personal-container-inputs">
-            <input class="input" type="email" name="email" value="gysemansthomas@gmail.com" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
-            <input class="input" type="password" name="password" value="*****" spellcheck="false" placeholder="Mot de passe" required />
-            <input class="input" type="text" name="firstname" value="Thomas" spellcheck="false" autocomplete="off" placeholder="Prénom" required />
-            <input class="input" type="text" name="lastname" value="Gysemans" spellcheck="false" autocomplete="off" placeholder="Nom" required />
+            <input class="input" type="email" name="email" maxlength="255" value="<?= htmlentities($client->getEmail() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
+            <input class="input" type="password" name="password" value="***" minlength="6" maxlength="255" spellcheck="false" placeholder="Mot de passe" required />
+            <input class="input" type="text" name="firstname" maxlength="255" value="<?= htmlentities($client->getFirstname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Prénom" required />
+            <input class="input" type="text" name="lastname" maxlength="255" value="<?= htmlentities($client->getLastname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Nom" required />
           </div>
         </div>
       </div>
@@ -48,19 +69,19 @@ AuthHelper::mustBeConnected("../index.php");
           <div class="container-customizations">
             <div class="container-switch">
               <span>Mode streamer</span>
-              <button class="switch" type="button" data-name="streamer-mode">
+              <button class="switch <?= $client->hasStreamerMode() ? 'on' : '' ?>" type="button" data-name="streamer-mode">
                 <div class="switch-state"></div>
                 <div class="switch-background"></div>
               </button>
             </div>
             <div class="container-switch">
               <span>Mode sombre</span>
-              <button class="switch on" type="button" data-name="dark-mode">
+              <button class="switch <?= $client->hasDarkMode() ? 'on' : '' ?>" type="button" data-name="dark-mode">
                 <div class="switch-state"></div>
                 <div class="switch-background"></div>
               </button>
             </div>
-            <button class="button-primary button-red">Supprimer le compte</button>
+            <button class="button-primary button-red" onclick="deleteAccount()">Supprimer le compte</button>
           </div>
         </div>
         <div class="container">
@@ -68,11 +89,11 @@ AuthHelper::mustBeConnected("../index.php");
           <div class="container-stats">
             <div class="stat">
               <span>Nombre de mots de passe :</span>
-              <b>13</b>
+              <b><?= $numberOfPasswords ?></b>
             </div>
             <div class="stat">
               <span>Nombre de notes :</span>
-              <b>26</b>
+              <b><?= $numberOfNotes ?></b>
             </div>
             <div class="stat">
               <span>Nombre d'images :</span>
@@ -80,7 +101,7 @@ AuthHelper::mustBeConnected("../index.php");
             </div>
             <div class="stat">
               <span>Date d'inscription :</span>
-              <b>08/02/2022</b>
+              <b><?= $client->getRegistrationDate()->format('d/m/Y') ?></b>
             </div>
           </div>
         </div>
@@ -88,10 +109,69 @@ AuthHelper::mustBeConnected("../index.php");
     </div>
   </main>
 
-  <input type="hidden" name="streamer-mode" value="false">
-  <input type="hidden" name="dark-mode" value="true">
+  <input type="hidden" name="streamer-mode" value="<?= $client->hasStreamerMode() ? 'true' : 'false' ?>">
+  <input type="hidden" name="dark-mode" value="<?= $client->hasDarkMode() ? 'true' : 'false' ?>">
 
   <script src="../js/sidebar.js"></script>
   <script src="../js/settings.js"></script>
+  <script src="../js/handleAjaxRequests.js"></script>
+  <script>
+    function getData() {
+      const data = new FormData();
+      data.append("email", document.querySelector("input[name='email']").value.trim());
+      data.append("firstname", document.querySelector("input[name='firstname']").value.trim());
+      data.append("lastname", document.querySelector("input[name='lastname']").value.trim());
+      data.append("streamerMode", document.querySelector("input[name='streamer-mode']").value);
+      data.append("darkMode", document.querySelector("input[name='dark-mode']").value);
+      const passwordInput = document.querySelector("input[name='password']");
+      if (passwordInput.value !== "***") {
+        // If it's been modified
+        data.append("password", passwordInput.value);
+      }
+      return data;
+    }
+    
+    function save() {
+      const data = getData();
+      const request = new AjaxRequest();
+      request.onSuccess = (response) => {
+        if (response.confirmed) {
+          Swal.fire("Sauvegarde réussie", "", "success");
+        } else {
+          Swal.fire("Erreur", response.error ?? "Erreur inconnue", "error");
+        }
+      };
+      request.onError = (status) => {
+        Swal.fire("Erreur", "Erreur ("+status+")", "error");
+      };
+      request.open("POST", "../sql/save_profil.php");
+      request.send(data);
+    }
+
+    function deleteAccount() {
+      Swal.fire({
+        title: "Suppression du compte",
+        text: "Souhaitez-vous supprimer définitivement votre compte ? Cette action est irréversible.",
+        icon: "warning",
+        confirmButtonText: "Supprimer",
+        cancelButtonText: "Annuler",
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          const request = new AjaxRequest();
+          request.onSuccess = (response) => {
+            if (response.confirmed) {
+              Swal.fire("Suppression réussie", "", "success").then(()=>window.location.href='../index.php');
+            } else {
+              Swal.fire("Erreur !", response.error ?? "Une erreur inconnue s'est produite.", "error");
+            }
+          };
+          request.onError = (status) => Swal.fire("Erreur !", "Erreur ("+status+")", "error");
+          request.open("GET", "../sql/delete_account.php");
+          request.send();
+        },
+      });
+    }
+  </script>
+  <?= HtmlBuilder::handleErrorMessage($errorMessage, $isCriticalError ? '../index.php' : null) ?>
 </body>
 </html>

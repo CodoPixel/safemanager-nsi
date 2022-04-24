@@ -31,14 +31,14 @@ class Client {
 	}
 
 	public function getRegistrationDate(): DateTime {
-			return new DateTime($this->registrationDate);
+			return new DateTime('@' . $this->registrationDate);
 	}
 
-	public function getStreamerMode(): bool {
+	public function hasStreamerMode(): bool {
 			return (bool)$this->streamerMode;
 	}
 
-	public function getDarkMode(): bool {
+	public function hasDarkMode(): bool {
 			return (bool)$this->darkMode;
 	}
 }
