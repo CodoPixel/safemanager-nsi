@@ -66,3 +66,12 @@ form {
     max-width: 270px;
   }
 }
+
+.container-delete-note-button {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+#delete-note-button {
+  margin-top: 20px;
+}

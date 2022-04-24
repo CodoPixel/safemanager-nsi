@@ -7,6 +7,9 @@ require_once "Connection.php";
 require_once "Sex.php";
 require_once 'ClientException.php';
 require_once 'Debug.php';
+require_once 'Label.php';
+require_once 'DefaultLabel.php';
+require_once 'NoteInterface.php';
 
 AuthHelper::launchSession();
 
@@ -22,12 +25,12 @@ class Auth {
    */
   private function init_pdo() {
     if (!self::$pdo) {
-      /* $dsn = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
+      $dsn = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
       $username = "root";
-      $password = "root"; */
-      $dsn = "mysql:host=db5007315961.hosting-data.io;dbname=dbs6027614;charset=utf8mb4";
+      $password = "root";
+      /* $dsn = "mysql:host=db5007315961.hosting-data.io;dbname=dbs6027614;charset=utf8mb4";
       $username = "dbu1992276";
-      $password = "SafeManagerNSIDB";
+      $password = "SafeManagerNSIDB"; */
 
       self::$pdo = new PDO($dsn, $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -268,7 +271,7 @@ class Auth {
       "url" => empty(trim($newData["url"])) ? null : trim($newData["url"]),
       "password" => $this->encryptText($newData["password"], $encryptionID),
       "email" => strlen(trim($newData["email"])) > 0 ? $this->encryptText(trim($newData["email"]), $encryptionID) : null,
-      "age" => (int)$newData["age"],
+      "age" => strlen($newData["age"]) > 0 ? (int)$newData["age"] : null,
       "sex" => (int)$newData["sex"],
       "pseudo" => empty(trim($newData["pseudo"])) ? null : trim($newData["pseudo"]),
       "firstname" => empty(trim($newData["firstname"])) ? null : trim($newData["firstname"]),
@@ -288,6 +291,191 @@ class Auth {
     $query->execute([
       "clientID" => $client->getClientID(),
       "id" => $id
+    ]);
+  }
+
+  /**
+   * Checks whether a label already exists or not.
+   * @param string $title
+   * @param string $color
+   * @return bool
+   */
+  public function doesLabelAlreadyExist(string $title, string $color):bool {
+    $query = self::$pdo->prepare("SELECT * FROM labels WHERE title=:title or hexColor=:color");
+    $query->execute([
+      "title" => $title,
+      "color" => $color,
+    ]);
+    $label = $query->fetch();
+
+    if ($label === false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * Adds a new label if it doesn't already exist.
+   * @param string $title
+   * @param string $color
+   * @throws ClientException
+   */
+  public function addNewLabel(string $title, string $color):string {
+    $newID = $this->encryptUniqueID();
+    $client = $this->getClient();
+    if ($this->doesLabelAlreadyExist($title, $color)) {
+      throw new ClientException("Ce label existe déjà.");
+    }
+    $query = self::$pdo->prepare("INSERT INTO labels (labelID, clientID, hexColor, title) VALUES (:labelid, :clientid, :color, :title)");
+    $query->execute([
+      "labelid" => $newID,
+      "clientid" => $client->getClientID(),
+      "color" => $color,
+      "title" => $title,
+    ]);
+    return $newID;
+  }
+
+  /**
+   * Gets all the labels of the currently logged in user.
+   * @throws ClientException
+   * @return Label[]
+   */
+  public function getAllLabels():array {
+    $client = $this->getClient();
+    $query = self::$pdo->prepare("SELECT * FROM labels WHERE clientID=:clientID");
+    $query->execute(["clientID" => $client->getClientID()]);
+    $labels = $query->fetchAll(PDO::FETCH_CLASS, Label::class);
+    return $labels;
+  }
+
+  /**
+   * Gets a label.
+   * @param string $labelID
+   */
+  public function getLabel(string $labelID):Label {
+    $query = self::$pdo->prepare("SELECT * FROM labels WHERE labelID=:id");
+    $query->execute(["id" => $labelID]);
+    $query->setFetchMode(PDO::FETCH_CLASS, Label::class);
+    $label = $query->fetch();
+    if ($label === false) {
+      return new DefaultLabel();
+    }
+    return $label;
+  }
+
+  /**
+   * Checks whether a note already exist (it checks only the title).
+   * @param mixed $data
+   * @param int $selectedNoteID The ID of the note we're editing (we want to be able to not change the title on editing)
+   * @return bool
+   */
+  public function doesNoteAlreadyExist($data, ?int $selectedNoteID):bool {
+    if ($selectedNoteID === null) {
+      $query = self::$pdo->prepare("SELECT * FROM notes WHERE title=:title");
+      $query->execute(["title" => $data["title"]]);
+    } else {
+      $query = self::$pdo->prepare("SELECT * FROM notes WHERE title=:title and not ID=:id");
+      $query->execute(["title" => $data["title"], "id" => $selectedNoteID]);
+    }
+    $note = $query->fetch();
+    if ($note === false) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * Creates a new note.
+   * @param mixed $data
+   * @throws ClientException
+   */
+  public function createNewNote($data) {
+    $client = $this->getClient();
+    if ($this->doesNoteAlreadyExist($data, null)) {
+      throw new ClientException("Cette note existe déjà.");
+    }
+    $query = self::$pdo->prepare("INSERT INTO notes (clientID, labelID, title, content, date) VALUES (:clientid, :labelid, :title, :content, :date)");
+    $query->execute([
+      "clientid" => $client->getClientID(),
+      "labelid" => $data["labelID"],
+      "title" => trim($data["title"]),
+      "content" => trim($data["content"]),
+      "date" => (new DateTime())->getTimestamp(),
+    ]);
+  }
+
+  /**
+   * Modifies an existing note.
+   * @param int $selectedNoteID
+   * @param mixed $data
+   */
+  public function editNote(int $selectedNoteID, $data) {
+    $client = $this->getClient();
+    if ($this->doesNoteAlreadyExist($data, $selectedNoteID)) {
+      throw new ClientException("Cette note existe déjà.");
+    }
+    $query = self::$pdo->prepare("UPDATE notes SET labelID=:labelID, title=:newtitle, content=:newcontent WHERE clientID=:clientID and ID=:id");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "id" => $selectedNoteID,
+      "labelID" => $data["labelID"],
+      "newtitle" => trim($data["title"]),
+      "newcontent" => trim($data["content"]),
+    ]);
+  }
+
+  /**
+   * Gets all the notes of the currently logged in user.
+   * @return Note[]
+   * @throws ClientException
+   */
+  public function getAllNotes():array {
+    $client = $this->getClient();
+    $query = self::$pdo->prepare("SELECT * FROM notes WHERE clientID=:clientID");
+    $query->execute(["clientID" => $client->getClientID()]);
+    $notes = $query->fetchAll(PDO::FETCH_CLASS, Note::class);
+    for ($i = 0; $i < count($notes); $i++) {
+      $label = $this->getLabel($notes[$i]->getLabelID());
+      $notes[$i]->setLabel($label);
+    }
+    return $notes;
+  }
+
+  /**
+   * Gets a note.
+   * @param int $selectedNoteID
+   * @return Note
+   * @throws ClientException
+   */
+  public function getNote(int $selectedNoteID):Note {
+    $client = $this->getClient();
+    $query = self::$pdo->prepare("SELECT * FROM notes WHERE clientID=:clientID and ID=:id");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "id" => $selectedNoteID,
+    ]);
+    $query->setFetchMode(PDO::FETCH_CLASS, Note::class);
+    $note = $query->fetch();
+    if ($note === false) {
+      throw new ClientException("Cette note n'existe pas.");
+    } else {
+      return $note;
+    }
+  }
+
+  /**
+   * Deletes a note.
+   * @param int $selectedNoteID
+   */
+  public function deleteNote(int $selectedNoteID) {
+    $client = $this->getClient();
+    $query = self::$pdo->prepare("DELETE FROM notes WHERE clientID=:clientID and ID=:id");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "id" => $selectedNoteID
     ]);
   }
 }

@@ -22,3 +22,5 @@ interface GenerationConfig {
   onGeneration?: (password: GeneratedPassword) => void;
   onCopy?: (copiedText: string) => void;
 }
+
+declare var Swal: any;

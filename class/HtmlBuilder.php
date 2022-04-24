@@ -170,6 +170,36 @@ class HtmlBuilder {
     HTML;
   }
 
+  public static function modalLabel():string {
+    return <<<HTML
+      <div id="modal-label" class="modal" role="dialog" aria-hidden="true" aria-modal="true" aria-labelledby="modal-label-title">
+        <!-- The wrapper is not the "white thing" -->
+        <div class="modal-wrapper">
+          <!-- add .modal-close-right if this is a small box -->
+          <button type="button" class="modal-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
+
+          <!-- The white thing -->
+          <div class="modal-content">
+            <!-- Put an ID here -->
+            <h1 id="modal-label-title">Création d'un label</h1>
+            <div class="container-inputs-for-label">
+              <input id="new-label-title" type="text" placeholder="Titre" maxlength="20" spellcheck="false" autocomplete="off" />
+              <div class="container-color-picker">
+                <div id="modal-preview-label-color"></div>
+                <button type="button" id="color-picker"><i class="fa-solid fa-eye-dropper"></i></button>
+                <input id="new-label-color" type="color" />
+              </div>
+            </div>
+            <span id="new-label-error"></span>
+            <div class="label-controls">
+              <button class="button-material" id="label-create-button" type="button">Utiliser</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    HTML;
+  }
+
   public static function handleErrorMessage(?string $errorMessage, ?string $redirection):string {
     if ($errorMessage === null) {
       return "";

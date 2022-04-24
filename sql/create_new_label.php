@@ -7,19 +7,21 @@ AuthHelper::mustBeConnected("../login.php");
 $response = array(
   "confirmed" => false,
   "error" => "",
+  "data" => [
+    "labelID" => null,
+  ]
 );
 
-$selectedID = isset($_GET["selectedID"]) ? (int)$_GET["selectedID"] : null;
+$title = isset($_GET["title"]) ? $_GET["title"] : null;
+$color = isset($_GET["color"]) ? $_GET["color"] : null;
 
 try {
-  if ($selectedID === null) {
-    throw new ClientException("Aucune note sélectionnée.");
-  }
-  if ($selectedID < 0) {
-    throw new ClientException("Cette note n'existe pas.");
+  if ($title === null || $color === null) {
+    throw new ClientException("Données corrompues.");
   }
   $auth = new Auth();
-  $auth->deleteConnection($selectedID);
+  $labelID = $auth->addNewLabel($title, $color);
+  $response["data"]["labelID"] = $labelID;
   $response["confirmed"] = true;
 } catch (ClientException $e) {
   $response["error"] = $e->getMessage();

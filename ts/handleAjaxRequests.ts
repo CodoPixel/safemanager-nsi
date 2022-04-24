@@ -36,7 +36,7 @@ class AjaxRequest {
     };
   }
 
-  public send(data: any): void {
+  public send(data?: any): void {
     this.xhr.send(data);
   }
 }

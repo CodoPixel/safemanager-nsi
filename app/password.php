@@ -133,6 +133,7 @@ try {
           icon: "warning",
           confirmButtonText: "Supprimer",
           cancelButtonText: "Annuler",
+          showLoaderOnConfirm:true,
           preConfirm: () => {
             const request = new AjaxRequest();
             request.onSuccess = (response) => {

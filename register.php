@@ -1,5 +1,6 @@
 <?php
 require_once "class/Auth.php";
+require_once "class/HtmlBuilder.php";
 AuthHelper::mustBeNotConnected("index.php");
 
 $errorMessage = null;
@@ -82,5 +83,6 @@ try {
       </form>
     </div>
     <script src="js/logging.js"></script>
+    <?= HtmlBuilder::handleErrorMessage($errorMessage, null) ?>
   </body>
 </html>

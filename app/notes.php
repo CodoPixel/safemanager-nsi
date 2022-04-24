@@ -2,6 +2,17 @@
 require_once "../class/HtmlBuilder.php";
 require_once "../class/Auth.php";
 AuthHelper::mustBeConnected("../index.php");
+
+$notes = [];
+$errorMessage = null;
+try {
+  $auth = new Auth();
+  $notes = $auth->getAllNotes();
+} catch (ClientException $e) {
+  $errorMessage = $e->getMessage();
+} catch (Exception $e) {
+  $errorMessage = "Une erreur d'origine inconnue s'est produite.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -26,50 +37,25 @@ AuthHelper::mustBeConnected("../index.php");
     <div>
     <div class="content">
       <div class="content-topbar">
-        <p>Vous avez <strong>3</strong> notes :</p>
+        <p>Vous avez <strong><?= count($notes) ?></strong> note<?= count($notes) > 1 ? 's' : '' ?> :</p>
         <a class="button-primary" href="note.php">Ajouter une note</a>
       </div>
       <div class="container-notes">
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <!-- todo: put a limit 200 characters -->
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.</p>
-          <div class="label" data-color="pink"></div>
-        </a>
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <p>Lorem ipsum dolor, siLorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.t amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.</p>
-          <div class="label" data-color="pink"></div>
-        </a>
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.
-          </p>
-          <div class="label" data-color="pink"></div>
-        </a>
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.</p>
-          <div class="label" data-color="pink"></div>
-        </a>
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.</p>
-          <div class="label" data-color="pink"></div>
-        </a>
-        <a href="note.php?note=yoyo" class="note" title="Consulter : Titre de la note">
-          <h2>Une notre très secrète</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Autem repellendus qui suscipit minima excepturi obcaecati ipsam officiis iusto, nostrum, dignissimos minus quos quas velit? Earum, repudiandae. Quas fugiat modi numquam.</p>
-          <div class="label" data-color="pink"></div>
-        </a>
+        <?php if ($errorMessage === null && count($notes) > 0): ?>
+          <?php foreach ($notes as $note): ?>
+            <a href="note.php?note=<?= $note->getID() ?>" class="note" title="Consulter : <?= htmlentities($note->getTitle()) ?>">
+              <h2><?= htmlentities($note->getTitle()) ?></h2>
+              <p><?= htmlentities($note->getContent()) ?></p>
+              <div class="label" data-color="<?= $note->getLabel() === null ? "black" : $note->getLabel()->getHexColor() ?>"></div>
+            </a>
+          <?php endforeach ?>
+        <?php endif ?>
       </div>
     </div>
   </main>
 
   <script src="../js/labels.js"></script>
   <script src="../js/sidebar.js"></script>
+  <?= HtmlBuilder::handleErrorMessage($errorMessage, null) ?>
 </body>
 </html>
