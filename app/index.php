@@ -7,6 +7,7 @@ $errorMessage = null;
 $allConnections = [];
 try {
   $auth = new Auth();
+  $client = $auth->getClient();
   $allConnections = $auth->getConnectionsOfCurrentClient();
 } catch (ClientException $e) {
   $errorMessage = $e->getMessage();
@@ -31,7 +32,7 @@ try {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Application</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("index"); ?>
   <main>
     <?= HtmlBuilder::header(true, "Rechercher un mot de passe"); ?>

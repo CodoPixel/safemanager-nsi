@@ -1,6 +1,19 @@
 <?php
 require_once 'class/HtmlBuilder.php';
 require_once 'class/Auth.php';
+
+$client = null;
+$errorMessage = null;
+$criticalError = false;
+try {
+  $auth = new Auth();
+  $client = $auth->getClient();
+} catch (ClientException $e) {
+  $errorMessage = $e->getMessage();
+} catch (Exception $e) {
+  $errorMessage = "Une erreur serveur est survenue.";
+  $criticalError = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -28,7 +41,7 @@ require_once 'class/Auth.php';
     <title>SafeManager - Le logiciel en ligne pour gérer vos mots de passe</title>
   </head>
 
-  <body>
+  <body class="<?= $client !== null && $client->hasDarkMode() ? 'dark' :'' ?>">
     <div class="page">
       <header>
         <i class="fa-solid fa-lock"></i>
@@ -36,7 +49,7 @@ require_once 'class/Auth.php';
           <a href="/">Accueil</a>
           <a href="infos/strength-intro.php">Informations</a>
           <a onclick="openGeneratePasswordModal()">Générateur</a>
-          <?php if (AuthHelper::isConnected() != null): ?>
+          <?php if (AuthHelper::isConnected()): ?>
             <a href="app/index.php">Application</a>
           <?php else: ?>
             <a href="login.php">Compte</a>

@@ -36,7 +36,7 @@ try {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Paramètres</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("settings"); ?>
   <main>
     <?= HtmlBuilder::header(true, null); ?>
@@ -116,13 +116,20 @@ try {
   <script src="../js/settings.js"></script>
   <script src="../js/handleAjaxRequests.js"></script>
   <script>
+    const inputDarkMode = document.querySelector("input[name='dark-mode']");
+    const originalTheme = getTheme();
+
+    function getTheme() {
+      return inputDarkMode.value === "true" ? "dark" : "light";
+    }
+    
     function getData() {
       const data = new FormData();
       data.append("email", document.querySelector("input[name='email']").value.trim());
       data.append("firstname", document.querySelector("input[name='firstname']").value.trim());
       data.append("lastname", document.querySelector("input[name='lastname']").value.trim());
       data.append("streamerMode", document.querySelector("input[name='streamer-mode']").value);
-      data.append("darkMode", document.querySelector("input[name='dark-mode']").value);
+      data.append("darkMode", inputDarkMode.value);
       const passwordInput = document.querySelector("input[name='password']");
       if (passwordInput.value !== "***") {
         // If it's been modified
@@ -136,7 +143,11 @@ try {
       const request = new AjaxRequest();
       request.onSuccess = (response) => {
         if (response.confirmed) {
-          Swal.fire("Sauvegarde réussie", "", "success");
+          Swal.fire("Sauvegarde réussie", "", "success").then(()=>{
+            if (originalTheme !== getTheme()) {
+              window.location.reload();
+            }
+          });
         } else {
           Swal.fire("Erreur", response.error ?? "Erreur inconnue", "error");
         }

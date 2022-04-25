@@ -10,11 +10,12 @@ $selectedNote = null;
 $criticalError = false;
 try {
   $auth = new Auth();
-  $labels = $auth->getAllLabels();
+  $client = $auth->getClient();
+  $labels = $auth->getAllLabels($client);
   if (isset($_GET["note"])) {
     $selectedNoteID = $_GET["note"];
     try {
-      $selectedNote = $auth->getNote($selectedNoteID);
+      $selectedNote = $auth->getNote($selectedNoteID, $client);
     } catch (ClientException $e) {
       $criticalError = true;
       throw $e;
@@ -45,7 +46,7 @@ try {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Ajouter une note</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("notes"); ?>
   <main>
     <?= HtmlBuilder::header(true, null); ?>

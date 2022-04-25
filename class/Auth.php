@@ -291,12 +291,13 @@ class Auth {
 
   /**
    * Gets all the connections of the currently logged in user.
+   * @param ?Client $client The currently logged in user to save performance.
    * @return Connection[]
    * @throws ClientException
    */
-  public function getConnectionsOfCurrentClient(): array {
+  public function getConnectionsOfCurrentClient(?Client $client = null): array {
     $connections = [];
-    $client = $this->getClient();
+    $client = $client ?? $this->getClient();
     $query = self::$pdo->prepare("SELECT * FROM passwords WHERE clientID=:clientID");
     $query->execute(["clientID" => $client->getClientID()]);
     $connections = $query->fetchAll(PDO::FETCH_CLASS, Connection::class);
@@ -306,10 +307,11 @@ class Auth {
   /**
    * Gets a connection with its ID.
    * @param int $id The ID of the connection within the database.
+   * @param ?Client $client To save performance, the currently logged in user.
    * @throws ClientException
    */
-  public function getSelectedConnection(int $id): Connection {
-    $client = $this->getClient();
+  public function getSelectedConnection(int $id, ?Client $client = null): Connection {
+    $client = $client ?? $this->getClient();
     $query = self::$pdo->prepare("SELECT * FROM passwords WHERE clientID=:clientID and ID=:selectedID");
     $query->execute([
       "clientID" => $client->getClientID(),
@@ -415,11 +417,12 @@ class Auth {
 
   /**
    * Gets all the labels of the currently logged in user.
+   * @param ?Client $client The currently logged in user to save performance.
    * @throws ClientException
    * @return Label[]
    */
-  public function getAllLabels():array {
-    $client = $this->getClient();
+  public function getAllLabels(?Client $client = null):array {
+    $client = $client ?? $this->getClient();
     $query = self::$pdo->prepare("SELECT * FROM labels WHERE clientID=:clientID");
     $query->execute(["clientID" => $client->getClientID()]);
     $labels = $query->fetchAll(PDO::FETCH_CLASS, Label::class);
@@ -531,11 +534,12 @@ class Auth {
 
   /**
    * Gets all the notes of the currently logged in user.
+   * @param ?Client $client To save performance.
    * @return Note[]
    * @throws ClientException
    */
-  public function getAllNotes():array {
-    $client = $this->getClient();
+  public function getAllNotes(?Client $client = null):array {
+    $client = $client ?? $this->getClient();
     $query = self::$pdo->prepare("SELECT * FROM notes WHERE clientID=:clientID");
     $query->execute(["clientID" => $client->getClientID()]);
     $notes = $query->fetchAll(PDO::FETCH_CLASS, Note::class);
@@ -549,10 +553,11 @@ class Auth {
   /**
    * Gets a note.
    * @param int $selectedNoteID
+   * @param ?Client $client The currently logged in user to save performance.
    * @return Note
    * @throws ClientException
    */
-  public function getNote(int $selectedNoteID):Note {
+  public function getNote(int $selectedNoteID, ?Client $client = null):Note {
     $client = $this->getClient();
     $query = self::$pdo->prepare("SELECT * FROM notes WHERE clientID=:clientID and ID=:id");
     $query->execute([

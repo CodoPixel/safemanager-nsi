@@ -7,7 +7,8 @@ $notes = [];
 $errorMessage = null;
 try {
   $auth = new Auth();
-  $notes = $auth->getAllNotes();
+  $client = $auth->getClient();
+  $notes = $auth->getAllNotes($client);
 } catch (ClientException $e) {
   $errorMessage = $e->getMessage();
 } catch (Exception $e) {
@@ -30,7 +31,7 @@ try {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Mes notes</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("notes"); ?>
   <main>
     <?= HtmlBuilder::header(true, "Rechercher un mot de passe"); ?>

@@ -2,6 +2,18 @@
 require_once "../class/HtmlBuilder.php";
 require_once "../class/Auth.php";
 AuthHelper::mustBeConnected("../index.php");
+
+$errorMessage = null;
+$criticalError = false;
+try {
+  $auth = new Auth();
+  $client = $auth->getClient();
+} catch (ClientException $e) {
+  $errorMessage = $e->getMessage();
+} catch (Exception $e) {
+  $errorMessage = "Une erreur serveur est survenue.";
+  $criticalError = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -19,7 +31,7 @@ AuthHelper::mustBeConnected("../index.php");
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Mes images</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("images"); ?>
   <main>
     <?= HtmlBuilder::header(true, "Rechercher une image"); ?>
@@ -65,5 +77,6 @@ AuthHelper::mustBeConnected("../index.php");
 
   <script src="../js/sidebar.js"></script>
   <script src="../js/image-presentation.js"></script>
+  <?= HtmlBuilder::handleErrorMessage($errorMessage, $criticalError ? '../index.php' : null) ?>
 </body>
 </html>

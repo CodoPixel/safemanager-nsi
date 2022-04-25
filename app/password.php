@@ -9,8 +9,9 @@ $errorMessage = null;
 try {
   if (!empty($_GET)) {
     $auth = new Auth();
+    $client = $auth->getClient();
     $selectedID = $_GET['id'];
-    $selectedConnection = $auth->getSelectedConnection((int)$selectedID);
+    $selectedConnection = $auth->getSelectedConnection((int)$selectedID, $client);
   }
 } catch (ClientException $e) {
   $errorMessage = $e->getMessage();
@@ -38,7 +39,7 @@ try {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <title>SafeManager - Ajouter un mot de passe</title>
 </head>
-<body class="dark">
+<body class="<?= $client->hasDarkMode() ? 'dark' : '' ?>">
   <?= HtmlBuilder::sidebar("index"); ?>
   <main>
     <?= HtmlBuilder::header(true, null); ?>

@@ -1,3 +1,12 @@
+<?php
+require_once '../class/Auth.php';
+
+$client = null;
+try {
+  $auth = new Auth();
+  $client = $auth->getClient();
+} catch (Exception $e) {}
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,7 +23,7 @@
     />
     <link rel="stylesheet" href="../styles/infos.css" />
   </head>
-  <body>
+  <body class="<?= $client !== null && $client->hasDarkMode() ? 'dark' : '' ?>">
     <div class="shader"></div>
     <aside id="sidebar">
       <nav>

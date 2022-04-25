@@ -8,10 +8,8 @@ try {
   if (!empty($_POST)) {
     $email = $_POST["email"];
     $password = $_POST["password"];
-
     $auth = new Auth();
     $auth->loginWithCredentials($email, $password);
-
     header("Location: app/index.php");
   }
 } catch (PDOException $e) {
