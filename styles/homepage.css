@@ -35,7 +35,7 @@ h2 {
 #safemanager button {
   display: block;
 }
-.dark span {
+.dark .page span {
   color: white;
 }
 #test {
