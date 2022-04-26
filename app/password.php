@@ -7,9 +7,9 @@ $selectedConnection = null;
 $seletedID = null;
 $errorMessage = null;
 try {
+  $auth = new Auth();
+  $client = $auth->getClient();
   if (!empty($_GET)) {
-    $auth = new Auth();
-    $client = $auth->getClient();
     $selectedID = $_GET['id'];
     $selectedConnection = $auth->getSelectedConnection((int)$selectedID, $client);
   }

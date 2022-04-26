@@ -1,6 +1,7 @@
 <?php
 require_once "../class/HtmlBuilder.php";
 require_once "../class/Auth.php";
+require_once "../class/Helpers/TextHelper.php";
 AuthHelper::mustBeConnected("../index.php");
 
 $notes = [];
@@ -44,9 +45,9 @@ try {
       <div class="container-notes">
         <?php if ($errorMessage === null && count($notes) > 0): ?>
           <?php foreach ($notes as $note): ?>
-            <a href="note.php?note=<?= $note->getID() ?>" class="note" title="Consulter : <?= htmlentities($note->getTitle()) ?>">
-              <h2><?= htmlentities($note->getTitle()) ?></h2>
-              <p><?= htmlentities($note->getContent()) ?></p>
+            <a href="<?= $client->hasStreamerMode() ? '' : 'note.php?note=' . $note->getID() ?>" style="<?= $client->hasStreamerMode() ? 'cursor:not-allowed' : '' ?>" class="note" title="Consulter : <?= htmlentities($note->getTitle()) ?>">
+              <h2><?= $client->hasStreamerMode() ? TextHelper::extractOf(htmlentities($note->getTitle()), 2) : htmlentities($note->getTitle()) ?></h2>
+              <p><?= $client->hasStreamerMode() ? TextHelper::extractOf(htmlentities($note->getContent()), 3) : htmlentities($note->getContent()) ?></p>
               <div class="label" data-color="<?= $note->getLabel() === null ? "black" : $note->getLabel()->getHexColor() ?>"></div>
             </a>
           <?php endforeach ?>

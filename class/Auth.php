@@ -28,7 +28,7 @@ class Auth {
       $dsn = "mysql:host=localhost;dbname=safemanager;charset=utf8mb4;";
       $username = "root";
       $password = "root";
-      /* $dsn = "mysql:host=db5007315961.hosting-data.io;dbname=dbs6027614;charset=utf8mb4";
+     /*  $dsn = "mysql:host=db5007315961.hosting-data.io;dbname=dbs6027614;charset=utf8mb4";
       $username = "dbu1992276";
       $password = "SafeManagerNSIDB"; */
 

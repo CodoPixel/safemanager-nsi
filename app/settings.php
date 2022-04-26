@@ -11,8 +11,8 @@ $numberOfPasswords = 0;
 try {
   $auth = new Auth();
   $client = $auth->getClient();
-  $numberOfNotes = $auth->getNumberOfNotes($client);
-  $numberOfPasswords = $auth->getNumberOfPasswords($client);
+  $numberOfNotes = $client->hasStreamerMode() ? '**' : $auth->getNumberOfNotes($client);
+  $numberOfPasswords = $client->hasStreamerMode() ? '**' : $auth->getNumberOfPasswords($client);
 } catch (ClientException $e) {
   $errorMessage = $e->getMessage();
 } catch (Exception $e) {
@@ -44,7 +44,7 @@ try {
     <div class="content">
       <div class="content-topbar">
         <div></div>
-        <button class="button-primary" type="submit" style="width:200px;" onclick="save()">Sauvegarder le profil</button>
+        <button <?= $client->hasStreamerMode() ? 'disabled' : '' ?> class="button-primary" type="submit" style="width:200px;" onclick="save()">Sauvegarder le profil</button>
       </div>
       <div class="container">
         <h2>Informations personnelles</h2>
@@ -56,10 +56,10 @@ try {
             <img src="../assets/private/default-avatar.png" alt="avatar" />
           </button>
           <div class="personal-container-inputs">
-            <input class="input" type="email" name="email" maxlength="255" value="<?= htmlentities($client->getEmail() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
+            <input class="input" type="<?= $client->hasStreamerMode() ? 'text' : 'email' ?>" name="email" maxlength="255" value="<?= $client->hasStreamerMode() ? '***' : htmlentities($client->getEmail() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
             <input class="input" type="password" name="password" value="***" minlength="6" maxlength="255" spellcheck="false" placeholder="Mot de passe" required />
-            <input class="input" type="text" name="firstname" maxlength="255" value="<?= htmlentities($client->getFirstname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Prénom" required />
-            <input class="input" type="text" name="lastname" maxlength="255" value="<?= htmlentities($client->getLastname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Nom" required />
+            <input class="input" type="text" name="firstname" maxlength="255" value="<?= $client->hasStreamerMode() ? '***' : htmlentities($client->getFirstname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Prénom" required />
+            <input class="input" type="text" name="lastname" maxlength="255" value="<?= $client->hasStreamerMode() ? '***' : htmlentities($client->getLastname() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Nom" required />
           </div>
         </div>
       </div>
@@ -81,7 +81,9 @@ try {
                 <div class="switch-background"></div>
               </button>
             </div>
-            <button class="button-primary button-red" onclick="deleteAccount()">Supprimer le compte</button>
+            <?php if (!$client->hasStreamerMode()): ?>
+              <button class="button-primary button-red" onclick="deleteAccount()">Supprimer le compte</button>
+            <?php endif ?>
           </div>
         </div>
         <div class="container">
@@ -114,75 +116,83 @@ try {
 
   <script src="../js/sidebar.js"></script>
   <script src="../js/settings.js"></script>
-  <script src="../js/handleAjaxRequests.js"></script>
-  <script>
-    const inputDarkMode = document.querySelector("input[name='dark-mode']");
-    const originalTheme = getTheme();
+  <?php if (!$client->hasStreamerMode()): ?>
+    <script src="../js/handleAjaxRequests.js"></script>
+    <script>
+      const inputDarkMode = document.querySelector("input[name='dark-mode']");
+      const inputStreamMode = document.querySelector("input[name='streamer-mode']");
+      const originalTheme = getTheme();
+      const originalStreamMode = getStreamMode();
 
-    function getTheme() {
-      return inputDarkMode.value === "true" ? "dark" : "light";
-    }
-    
-    function getData() {
-      const data = new FormData();
-      data.append("email", document.querySelector("input[name='email']").value.trim());
-      data.append("firstname", document.querySelector("input[name='firstname']").value.trim());
-      data.append("lastname", document.querySelector("input[name='lastname']").value.trim());
-      data.append("streamerMode", document.querySelector("input[name='streamer-mode']").value);
-      data.append("darkMode", inputDarkMode.value);
-      const passwordInput = document.querySelector("input[name='password']");
-      if (passwordInput.value !== "***") {
-        // If it's been modified
-        data.append("password", passwordInput.value);
+      function getTheme() {
+        return inputDarkMode.value === "true" ? "dark" : "light";
       }
-      return data;
-    }
-    
-    function save() {
-      const data = getData();
-      const request = new AjaxRequest();
-      request.onSuccess = (response) => {
-        if (response.confirmed) {
-          Swal.fire("Sauvegarde réussie", "", "success").then(()=>{
-            if (originalTheme !== getTheme()) {
-              window.location.reload();
-            }
-          });
-        } else {
-          Swal.fire("Erreur", response.error ?? "Erreur inconnue", "error");
-        }
-      };
-      request.onError = (status) => {
-        Swal.fire("Erreur", "Erreur ("+status+")", "error");
-      };
-      request.open("POST", "../sql/save_profil.php");
-      request.send(data);
-    }
 
-    function deleteAccount() {
-      Swal.fire({
-        title: "Suppression du compte",
-        text: "Souhaitez-vous supprimer définitivement votre compte ? Cette action est irréversible.",
-        icon: "warning",
-        confirmButtonText: "Supprimer",
-        cancelButtonText: "Annuler",
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-          const request = new AjaxRequest();
-          request.onSuccess = (response) => {
-            if (response.confirmed) {
-              Swal.fire("Suppression réussie", "", "success").then(()=>window.location.href='../index.php');
-            } else {
-              Swal.fire("Erreur !", response.error ?? "Une erreur inconnue s'est produite.", "error");
-            }
-          };
-          request.onError = (status) => Swal.fire("Erreur !", "Erreur ("+status+")", "error");
-          request.open("GET", "../sql/delete_account.php");
-          request.send();
-        },
-      });
-    }
-  </script>
+      function getStreamMode() {
+        return inputStreamMode.value === "true" ? "enabled" : "disabled";
+      }
+      
+      function getData() {
+        const data = new FormData();
+        data.append("email", document.querySelector("input[name='email']").value.trim());
+        data.append("firstname", document.querySelector("input[name='firstname']").value.trim());
+        data.append("lastname", document.querySelector("input[name='lastname']").value.trim());
+        data.append("streamerMode", document.querySelector("input[name='streamer-mode']").value);
+        data.append("darkMode", inputDarkMode.value);
+        const passwordInput = document.querySelector("input[name='password']");
+        if (passwordInput.value !== "***") {
+          // If it's been modified
+          data.append("password", passwordInput.value);
+        }
+        return data;
+      }
+      
+      function save() {
+        const data = getData();
+        const request = new AjaxRequest();
+        request.onSuccess = (response) => {
+          if (response.confirmed) {
+            Swal.fire("Sauvegarde réussie", "", "success").then(()=>{
+              if (originalTheme !== getTheme() || originalStreamMode !== getStreamMode()) {
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire("Erreur", response.error ?? "Erreur inconnue", "error");
+          }
+        };
+        request.onError = (status) => {
+          Swal.fire("Erreur", "Erreur ("+status+")", "error");
+        };
+        request.open("POST", "../sql/save_profil.php");
+        request.send(data);
+      }
+
+      function deleteAccount() {
+        Swal.fire({
+          title: "Suppression du compte",
+          text: "Souhaitez-vous supprimer définitivement votre compte ? Cette action est irréversible.",
+          icon: "warning",
+          confirmButtonText: "Supprimer",
+          cancelButtonText: "Annuler",
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            const request = new AjaxRequest();
+            request.onSuccess = (response) => {
+              if (response.confirmed) {
+                Swal.fire("Suppression réussie", "", "success").then(()=>window.location.href='../index.php');
+              } else {
+                Swal.fire("Erreur !", response.error ?? "Une erreur inconnue s'est produite.", "error");
+              }
+            };
+            request.onError = (status) => Swal.fire("Erreur !", "Erreur ("+status+")", "error");
+            request.open("GET", "../sql/delete_account.php");
+            request.send();
+          },
+        });
+      }
+    </script>
+  <?php endif ?>
   <?= HtmlBuilder::handleErrorMessage($errorMessage, $isCriticalError ? '../index.php' : null) ?>
 </body>
 </html>
