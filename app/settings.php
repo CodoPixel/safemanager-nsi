@@ -44,7 +44,11 @@ try {
     <div class="content">
       <div class="content-topbar">
         <div></div>
-        <button <?= $client->hasStreamerMode() ? 'disabled' : '' ?> class="button-primary" type="submit" style="width:200px;" onclick="save()">Sauvegarder le profil</button>
+        <?php if ($client->hasStreamerMode()): ?>
+          <button class="button-primary" type="submit" style="width:260px;" onclick="removeStreamerMode()">Retirer le mode streamer</button>
+        <?php else: ?>
+          <button class="button-primary" type="submit" style="width:200px;" onclick="save()">Sauvegarder le profil</button>
+        <?php endif ?>
       </div>
       <div class="container">
         <h2>Informations personnelles</h2>
@@ -116,8 +120,8 @@ try {
 
   <script src="../js/sidebar.js"></script>
   <script src="../js/settings.js"></script>
+  <script src="../js/handleAjaxRequests.js"></script>
   <?php if (!$client->hasStreamerMode()): ?>
-    <script src="../js/handleAjaxRequests.js"></script>
     <script>
       const inputDarkMode = document.querySelector("input[name='dark-mode']");
       const inputStreamMode = document.querySelector("input[name='streamer-mode']");
@@ -190,6 +194,22 @@ try {
             request.send();
           },
         });
+      }
+    </script>
+  <?php else: ?>
+    <script>
+      function removeStreamerMode() {
+        const request = new AjaxRequest();
+        request.onSuccess = (response) => {
+          if (response.confirmed) {
+            Swal.fire("Streamer Mode retiré", "", "success").then(()=>window.location.reload());
+          } else {
+            Swal.fire("Erreur !", response.error ?? "Une erreur inconnue s'est produite.", "error");
+          }
+        };
+        request.onError = (status) => Swal.fire("Erreur !", "Erreur ("+status+")", "error");
+        request.open("GET", "../sql/remove_streamer_mode.php");
+        request.send();
       }
     </script>
   <?php endif ?>

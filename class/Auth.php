@@ -585,4 +585,14 @@ class Auth {
       "id" => $selectedNoteID
     ]);
   }
+
+  /**
+   * Disables the streamer mode from the client.
+   * @throws ClientException
+   */
+  public function removeStreamerMode() {
+    $client = $this->getClient();
+    $query = self::$pdo->prepare("UPDATE client SET streamerMode=0 WHERE clientID=:clientid");
+    $query->execute(["clientid" => $client->getClientID()]);
+  }
 }
