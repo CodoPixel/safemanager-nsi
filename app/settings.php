@@ -177,7 +177,6 @@ try {
         const data = getData();
         const request = new AjaxRequest();
         request.onSuccess = (response) => {
-          console.log("response =", response);
           if (response.confirmed) {
             Swal.fire("Sauvegarde réussie", "", "success").then(()=>{
               if (originalTheme !== getTheme() || originalStreamMode !== getStreamMode()) {

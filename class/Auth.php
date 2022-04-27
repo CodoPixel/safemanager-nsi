@@ -10,6 +10,7 @@ require_once 'Debug.php';
 require_once 'Label.php';
 require_once 'DefaultLabel.php';
 require_once 'NoteInterface.php';
+require_once 'Image.php';
 
 AuthHelper::launchSession();
 
@@ -175,7 +176,7 @@ class Auth {
     if (!$this->isValidClientDataForProfilUpdate($data)) {
       throw new ClientException("Données invalides");
     }
-    $unique_id = $this->genRandomSetOfNumbers();
+    $unique_id = $this->genRandomSetOfNumbers() . '_';
     $avatar_name = "avatar";
     $avatar_path = "../assets/public/avatars/" . $client->getClientID() . '/';
     if (!file_exists($avatar_path)) {
@@ -695,5 +696,88 @@ class Auth {
     $client = $this->getClient();
     $query = self::$pdo->prepare("UPDATE client SET streamerMode=0 WHERE clientID=:clientid");
     $query->execute(["clientid" => $client->getClientID()]);
+  }
+  
+  /**
+   * Publishes an image in the database and save it in the server.
+   * @param array $filesData The given instance of $_FILES.
+   * @return array The client ID and the image's name to be used in JavaScript (client-side).
+   * @throws ClientException
+   */
+  public function publishImage(array $filesData):array {
+    $client = $this->getClient();
+    $unique_id = $this->genRandomSetOfNumbers() . '_';
+    $image_index_name = "image";
+    $image_path = "../assets/public/images/" . $client->getClientID() . '/';
+    if (!file_exists($image_path)) {
+      mkdir($image_path);
+    }
+    $image = $this->uploadImage($filesData, $unique_id, $image_index_name, $image_path);
+    $query = self::$pdo->prepare("INSERT INTO images (clientID, name, date) VALUES (:clientID, :name, :date)");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "name" => $image,
+      "date" => (new DateTime())->getTimestamp(),
+    ]);
+    return ["ID" => self::$pdo->lastInsertId(), "clientID" => $client->getClientID(), "name" => $image];
+  }
+
+  /**
+   * Gets all the images of the user.
+   * @param ?Client $client Instance of Client to save performance if it's already been fetched.
+   * @throws ClientException
+   * @return Image[] The images.
+   */
+  public function getAllImages(?Client $client = null):array {
+    $client = $client ?? $this->getClient();
+    $query = self::$pdo->prepare("SELECT * FROM images WHERE clientID=:clientID");
+    $query->execute(["clientID" => $client->getClientID()]);
+    $images = $query->fetchAll(PDO::FETCH_CLASS, Image::class);
+    if ($images === false) {
+      throw new ClientException("Impossible de récupérer les images.");
+    } else {
+      return $images;
+    }
+  }
+
+  /**
+   * Selects an image.
+   * @param int $id The ID of the image.
+   * @param ?Client $client The instance of the client if it already exists.
+   * @throws ClientException
+   * @return Image
+   */
+  public function selectImage(int $id, ?Client $client = null): Image {
+    $client = $client ?? $this->getClient();
+    $query = self::$pdo->prepare("SELECT * FROM images WHERE clientID=:clientID and ID=:id");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "id" => $id,
+    ]);
+    $query->setFetchMode(PDO::FETCH_CLASS, Image::class);
+    $image = $query->fetch();
+    if ($image === false) {
+      throw new ClientException("Image introuvable.");
+    } else {
+      return $image;
+    }
+  }
+
+  /**
+   * Deletes an image.
+   * @param int $id The ID of the image.
+   * @throws ClientException
+   */
+  public function deleteImage(int $id) {
+    $client = $this->getClient();
+    $image = $this->selectImage($id, $client);
+    $query = self::$pdo->prepare("DELETE FROM images WHERE clientID=:clientID and ID=:ID");
+    $query->execute([
+      "clientID" => $client->getClientID(),
+      "ID" => $id,
+    ]);
+    try {
+      unlink("../assets/public/images/" . $client->getClientID() . '/' . $image->getName());
+    } catch(Exception $e) {}
   }
 }

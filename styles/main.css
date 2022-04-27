@@ -129,7 +129,8 @@ main {
 }
 
 .dark .content-topbar p,
-.dark .content-topbar strong {
+.dark .content-topbar strong,
+.dark .content-topbar span {
   color: #fff;
 }
 
