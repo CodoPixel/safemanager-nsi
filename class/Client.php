@@ -9,36 +9,41 @@ class Client {
 	protected $registrationDate;
 	protected $streamerMode;
 	protected $darkMode;
+	protected $avatar;
 
 	public function getEmail(): string {
-			return $this->email;
+		return $this->email;
 	}
 
 	public function getClientID(): string {
-			return $this->clientID;
+		return $this->clientID;
 	}
 
 	public function getFirstname(): string {
-			return $this->firstname;
+		return $this->firstname;
 	}
 
 	public function getLastname(): string {
-			return $this->lastname;
+		return $this->lastname;
 	}
 
 	public function getHashedPassword(): string {
-			return $this->password;
+		return $this->password;
 	}
 
 	public function getRegistrationDate(): DateTime {
-			return new DateTime('@' . $this->registrationDate);
+		return new DateTime('@' . $this->registrationDate);
 	}
 
 	public function hasStreamerMode(): bool {
-			return (bool)$this->streamerMode;
+		return (bool)$this->streamerMode;
 	}
 
 	public function hasDarkMode(): bool {
-			return (bool)$this->darkMode;
+		return (bool)$this->darkMode;
+	}
+
+	public function getAvatar():?string {
+		return $this->avatar;
 	}
 }

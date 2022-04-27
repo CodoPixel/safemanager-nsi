@@ -53,11 +53,12 @@ try {
       <div class="container">
         <h2>Informations personnelles</h2>
         <div class="container-personal-info">
-          <button class="button-container-image" type="button">
+          <button class="button-container-image" type="button" onclick="askForImage()">
             <div class="overlay-modify-image">
               <i class="fa-solid fa-camera-retro"></i>
             </div>
-            <img src="../assets/private/default-avatar.png" alt="avatar" />
+            <img src="<?= $client->getAvatar() !== null ? '../assets/public/avatars/' . $client->getClientID() . '/' . $client->getAvatar() : '../assets/private/default-avatar.png' ?>" id="preview-avatar" alt="avatar" />
+            <input type="file" name="avatar" id="avatar">
           </button>
           <div class="personal-container-inputs">
             <input class="input" type="<?= $client->hasStreamerMode() ? 'text' : 'email' ?>" name="email" maxlength="255" value="<?= $client->hasStreamerMode() ? '***' : htmlentities($client->getEmail() ?? '') ?>" spellcheck="false" autocomplete="off" placeholder="Adresse email" required />
@@ -127,6 +128,9 @@ try {
       const inputStreamMode = document.querySelector("input[name='streamer-mode']");
       const originalTheme = getTheme();
       const originalStreamMode = getStreamMode();
+      const avatarInput = document.querySelector("#avatar");
+      const avatarPreview = document.querySelector("#preview-avatar");
+      let fileToUpload = null;
 
       function getTheme() {
         return inputDarkMode.value === "true" ? "dark" : "light";
@@ -135,6 +139,21 @@ try {
       function getStreamMode() {
         return inputStreamMode.value === "true" ? "enabled" : "disabled";
       }
+
+      function askForImage() {
+        avatarInput.click();
+      }
+
+      function updateAvatarPreview() {
+        if (avatarInput.files && avatarInput.files.length > 0) {
+          const file = avatarInput.files[0];
+          fileToUpload = file;
+          const url = URL.createObjectURL(file);
+          avatarPreview.setAttribute("src", url);
+        }
+      }
+
+      avatarInput.addEventListener("change", updateAvatarPreview);
       
       function getData() {
         const data = new FormData();
@@ -148,6 +167,9 @@ try {
           // If it's been modified
           data.append("password", passwordInput.value);
         }
+        if (fileToUpload) {
+          data.append("avatar", fileToUpload);
+        }
         return data;
       }
       
@@ -155,6 +177,7 @@ try {
         const data = getData();
         const request = new AjaxRequest();
         request.onSuccess = (response) => {
+          console.log("response =", response);
           if (response.confirmed) {
             Swal.fire("Sauvegarde réussie", "", "success").then(()=>{
               if (originalTheme !== getTheme() || originalStreamMode !== getStreamMode()) {

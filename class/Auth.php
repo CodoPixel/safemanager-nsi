@@ -151,30 +151,131 @@ class Auth {
   }
 
   /**
+   * Creates a random set of numbers to append a string (for the name of a file for instance).
+   * For that, we use `time()` but if a lot of images are being handled at the same time,
+   * it could produced identical return values, so we avoid this by adding 3 random numbers at the end.
+   * @return string
+   */
+  public function genRandomSetOfNumbers():string {
+    $randomSet = '';
+    for ($i = 0; $i < 3; $i++) {
+      $randomSet .= (string)rand(0, 9); 
+    }
+    return time() . '_' . $randomSet;
+  } 
+
+  /**
    * Saves new profil for currently logged in user.
+   * @param mixed $data The data from the inputs
+   * @param array $filesData The avatar (this could be an empty array)
    * @throws ClientException
    */
-  public function saveProfil($data) {
+  public function saveProfil($data, array $filesData) {
     $client = $this->getClient();
     if (!$this->isValidClientDataForProfilUpdate($data)) {
       throw new ClientException("Données invalides");
     }
+    $unique_id = $this->genRandomSetOfNumbers();
+    $avatar_name = "avatar";
+    $avatar_path = "../assets/public/avatars/" . $client->getClientID() . '/';
+    if (!file_exists($avatar_path)) {
+      mkdir($avatar_path);
+    }
+    $avatar = $this->uploadImage($filesData, $unique_id, $avatar_name, $avatar_path);
     $newData = [
       "clientID" => $client->getClientID(),
       "email" => trim($data["email"]),
       "firstname" => trim($data["firstname"]),
       "lastname" => trim($data["lastname"]),
       "streamerMode" => $data["streamerMode"] === "true" ? 1 : 0,
-      "darkMode" => $data["darkMode"] === "true" ? 1 : 0
+      "darkMode" => $data["darkMode"] === "true" ? 1 : 0,
+      "avatar" => $avatar,
     ];
     if ($data["password"] != null) {
       $newData["password"] = password_hash($data["password"], PASSWORD_BCRYPT);
-      $query = self::$pdo->prepare("UPDATE client SET email=:email, password=:password, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode WHERE clientID=:clientID");
+      $query = self::$pdo->prepare("UPDATE client SET email=:email, password=:password, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode, avatar=:avatar WHERE clientID=:clientID");
     } else {
-      $query = self::$pdo->prepare("UPDATE client SET email=:email, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode WHERE clientID=:clientID");
+      $query = self::$pdo->prepare("UPDATE client SET email=:email, firstname=:firstname, lastname=:lastname, streamerMode=:streamerMode, darkMode=:darkMode, avatar=:avatar WHERE clientID=:clientID");
     }
     $query->execute($newData);
   }
+
+  /**
+    * Checks $_FILES[][name] name.
+    * @param string $filename Uploaded file name.
+    * @return bool
+    * @author Yousef Ismaeil Cliprz
+    */
+    protected function valid_filename_characters(string $filename): bool
+    {
+      return (bool) ((preg_match("`^[-0-9A-Z_\.]+$`i",$filename)) ? true : false);
+    }
+
+    /**
+    * Checks $_FILES[][name] length.
+    * @param string $filename Uploaded file name.
+    * @return bool
+    * @author Yousef Ismaeil Cliprz.
+    */
+    protected function invalid_filename_length(string $filename): bool
+    {
+      return (bool) ((mb_strlen($filename,"UTF-8") > 225) ? true : false);
+    }
+
+    /**
+     * Stores an image into the server.
+     * @param  array  $filesData The given instance of $_FILES.
+     * @param  string $unique_id An unique id to prepend to the new image name.
+     * @param  string $image_name The name of the image.
+     * @param  string $path The path in which to store the uploaded image.
+     * @throws ClientException If the image is too heavy. Max: MAXIMUM_SIZE.
+     * @throws ClientException If the path does not exist.
+     * @throws ClientException If the format of the image is not supported.
+     * @throws Exception If an error has occured while moving the image.
+     * @return string The name of the image.
+     */
+    public function uploadImage(array $filesData, string $unique_id, string $image_name, string $path): ?string
+    {
+      if (isset($filesData[$image_name])) {
+        $img_name = $filesData[$image_name]['name'];
+        if (empty($img_name)) {
+          return null;
+        }
+
+        if (!$this->valid_filename_characters($img_name)) {
+          throw new InvalidArgumentException("Le nom de l'image contient des caractères étrangers.");
+        }
+
+        if ($this->invalid_filename_length($img_name)) {
+          throw new InvalidArgumentException("Le nom de l'image est trop grand.");
+        }
+          
+        $exploded_image = explode('.', $img_name);
+        $img_ext = end($exploded_image); // get the exact extension of the image
+        $tmp_name = $filesData[$image_name]['tmp_name'];
+        $img_size = $filesData[$image_name]['size'];
+        if (in_array($img_ext, self::VALID_IMAGE_EXTENSIONS)) {
+          if ($img_size > MAXIMUM_SIZE) {
+            throw new ClientException("L'image est trop lourde. Maximum: " . MAXIMUM_SIZE_STRING . '.');
+          }
+
+          if (!file_exists($path)) {
+            throw new InvalidArgumentException("Impossible de stocker l'image dans un dossier qui n'existe pas.");
+          } 
+
+          $new_image_name = $unique_id . $img_name;
+          if (move_uploaded_file($tmp_name, $path . $new_image_name)) {
+            return $new_image_name;
+          } else {
+            throw new Exception("Impossible de stocker l'image.");
+          }
+        } else {
+          throw new ClientException("L'extension de cette image n'est pas supportée. Utilisez " . join(", ", self::VALID_IMAGE_EXTENSIONS) . '.');
+        }
+      } else {
+        return null;
+      }
+    }
 
   /**
    * Deletes the account of the currently logged in user.
