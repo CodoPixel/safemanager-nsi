@@ -75,7 +75,7 @@ try {
             <p>
               Bénéficiez de notre algorithme révolutionnaire pour protéger vos mots de passe d'une manière très poussée et sûre.
             </p>
-            <button class="begin" onclick="window.location.href='<?= $client === null ? 'login.php' : 'app/index.php' ?>'">Commencer</button>
+            <button class="begin" onclick="window.location.href='app/index.php'">Commencer</button>
           </div>
         </section>
         <section>
@@ -85,7 +85,7 @@ try {
             <p>
               Nous offrons également un service de protection de vos images de sorte à ce que nous n'ayez pas besoin de les conserver dans votre galerie photos (c'est risqué !).
             </p>
-            <button class="begin" onclick="window.location.href='<?= $client === null ? 'login.php' : 'app/images.php' ?>'">Commencer</button>
+            <button class="begin" onclick="window.location.href='app/images.php'">Commencer</button>
           </div>
         </section>
         <section>
