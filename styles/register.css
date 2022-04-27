@@ -134,12 +134,11 @@ input {
 #eye {
   cursor: pointer;
   position: absolute;
-  top: 55%;
+  top: 50%;
   right: 15px;
   transform: translateY(-50%);
   color: #444;
 }
-
 .dark #eye {
   color: #ffff;
 }
