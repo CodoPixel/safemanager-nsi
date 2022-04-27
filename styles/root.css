@@ -11,8 +11,8 @@
   --common-border: 1px solid rgba(68, 68, 68, 0.2);
   --text-color: #444;
   --lightmode-background-color: #f5f6fb;
-  --darkmode-background-color: #101010;
-  --darkmode-lighter-background-color: #191919;
+  --darkmode-background-color: #080808;
+  --darkmode-lighter-background-color: #1b1a1a;
   --darkmode-main-color: #133774;
   --darkmode-main-color-hover: #0e2855;
   --darkmode-main-color-light100: rgba(19, 55, 116, 0.1);

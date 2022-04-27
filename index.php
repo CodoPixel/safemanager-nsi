@@ -63,21 +63,19 @@ try {
         aléatoirement, triez, classez etc. Venez surfer sur notre site web, mais attention 🤪
         n'oubliez pas votre planche !
         <button id="test" onclick="openTestPasswordModal()">Tester votre mot de passe</button>
-        <button id="savoir">En savoir plus</button>
+        <button id="savoir" onclick="window.location.href='#more'">En savoir plus</button>
       </div>
       <img id="guy" src="assets/private/security.svg" />
       <img id="circle" src="assets/private/circle.svg" alt="" />
       <div id="bloc1">
-        <section>
+        <section id="more">
           <img id="secure_login" src="assets/private/login.svg" />
           <div id="mdp">
             <h2><span>Protégez vos mots de passe</span></h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos illum, tenetur
-              rerum repellendus architecto voluptas harum quia fugit maxime praesentium accusantium
-              laboriosam. Odio temporibus qui, fugiat at illo ullam repellendus.
+              Bénéficiez de notre algorithme révolutionnaire pour protéger vos mots de passe d'une manière très poussée et sûre.
             </p>
-            <button id="begin">Commencer</button>
+            <button class="begin" onclick="window.location.href='<?= $client === null ? 'login.php' : 'app/index.php' ?>'">Commencer</button>
           </div>
         </section>
         <section>
@@ -85,11 +83,9 @@ try {
           <div>
             <h2><span>Protégez vos images</span></h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos illum, tenetur
-              rerum repellendus architecto voluptas harum quia fugit maxime praesentium accusantium
-              laboriosam. Odio temporibus qui, fugiat at illo ullam repellendus.
+              Nous offrons également un service de protection de vos images de sorte à ce que nous n'ayez pas besoin de les conserver dans votre galerie photos (c'est risqué !).
             </p>
-            <button id="begin">Commencer</button>
+            <button class="begin" onclick="window.location.href='<?= $client === null ? 'login.php' : 'app/images.php' ?>'">Commencer</button>
           </div>
         </section>
         <section>
@@ -97,11 +93,9 @@ try {
           <div>
             <h2><span>Nos cours de sécurité</span></h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos illum, tenetur
-              rerum repellendus architecto voluptas harum quia fugit maxime praesentium accusantium
-              laboriosam. Odio temporibus qui, fugiat at illo ullam repellendus.
+              En plus de proposer des services concrets, nous vous offrons également la possibilité d'en savoir plus sur les méthodes et les bonnes habitudes à prendre quand il s'agit de protéger vos données personnelles (et surtout vos mots de passe).
             </p>
-            <button id="begin">Consulter</button>
+            <button class="begin" onclick="window.location.href='infos/strength-intro.php'">Consulter</button>
           </div>
         </section>
         <footer>
