@@ -251,10 +251,8 @@ class GeneratePasswordModal {
       const words = [];
       for (let i = 0; i < 3; i++) {
         const chosenLetter = minAlpha[this.generateRandomInteger(0, minAlpha.length)];
-        const dictFile =
-          window.location.href.indexOf("http://localhost:8888") < 0
-            ? "/dict/" + chosenLetter + ".txt"
-            : "/safemanager-nsi/dict/" + chosenLetter + ".txt";
+        const dictFile = "/safemanager-nsi/dict/" + chosenLetter + ".txt";
+        // todo: this won't work on another URL.
         const query = await fetch(dictFile, { method: "GET" });
         const responseText = await query.text();
         const randomIndex = this.generateRandomInteger(0, responseText.length);

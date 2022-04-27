@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : sam. 23 avr. 2022 à 09:59
+-- Généré le : mer. 27 avr. 2022 à 18:29
 -- Version du serveur : 5.7.34
 -- Version de PHP : 7.4.21
 
@@ -36,15 +36,16 @@ CREATE TABLE `client` (
   `password` varchar(255) NOT NULL,
   `registrationDate` int(11) NOT NULL,
   `streamerMode` tinyint(1) NOT NULL DEFAULT '0',
-  `darkMode` tinyint(1) NOT NULL DEFAULT '0'
+  `darkMode` tinyint(1) NOT NULL DEFAULT '0',
+  `avatar` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`ID`, `email`, `clientID`, `firstname`, `lastname`, `password`, `registrationDate`, `streamerMode`, `darkMode`) VALUES
-(1, 'gysemansthomas@gmail.com', '8lpxex', 'Thomas', 'Gysemans', '$2y$10$r3lC8mql4JbfAoktu/JefeYg5I0raNJt.hQY9wPQJOf8xRmQLGEc.', 1650562963, 0, 0);
+INSERT INTO `client` (`ID`, `email`, `clientID`, `firstname`, `lastname`, `password`, `registrationDate`, `streamerMode`, `darkMode`, `avatar`) VALUES
+(2, 'gysemansthomas@gmail.com', 'z0qig0', 'Thomas', 'Gysemans', '$2y$10$7z0sw4uIGvqxHJprHsViVOBNo4faoudbdvkc43/0y983UmsVStAaC', 1650800876, 0, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -53,10 +54,11 @@ INSERT INTO `client` (`ID`, `email`, `clientID`, `firstname`, `lastname`, `passw
 --
 
 CREATE TABLE `images` (
-  `clientID` varchar(255) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `ID` int(11) NOT NULL,
+  `clientID` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -72,6 +74,13 @@ CREATE TABLE `labels` (
   `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `labels`
+--
+
+INSERT INTO `labels` (`ID`, `labelID`, `clientID`, `hexColor`, `title`) VALUES
+(1, 'gfp71a', 'z0qig0', 'bb1111', 'rouuuge');
+
 -- --------------------------------------------------------
 
 --
@@ -84,8 +93,15 @@ CREATE TABLE `notes` (
   `labelID` varchar(255) DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `notes`
+--
+
+INSERT INTO `notes` (`ID`, `clientID`, `labelID`, `title`, `content`, `date`) VALUES
+(1, 'z0qig0', 'gfp71a', 'TITRE', 'CONTENU', 1650996857);
 
 -- --------------------------------------------------------
 
@@ -115,7 +131,7 @@ CREATE TABLE `passwords` (
 --
 
 INSERT INTO `passwords` (`ID`, `pk`, `clientID`, `title`, `url`, `date`, `password`, `email`, `age`, `sex`, `pseudo`, `firstname`, `lastname`, `more`) VALUES
-(7, 0x723823cb, '8lpxex', 'aaaa', NULL, 1650707843, 'RN/osz3GfuSb/401jFp3aAnDQI4+vFoAC+wgEXDWQNJZJsWt1+H1/4dtphME202dSRk4lYVxldz72y0pKoaX4w==', NULL, 0, 0, NULL, NULL, NULL, NULL);
+(1, 0xd05bad0f, 'z0qig0', 'Google', 'https://google.com', 1650996351, 'Flmx4WFVZxxiI/pb4hWvoBOndgaN3uFj7gwUNeVcXTeQdGbm7oUG7IQKPQbu4uxEnKyY8jgb/cEb7nHKJ7DVKA==', 'MBGFJrbxRDJkfAb+nbmkTWqA4SXGBvAim0GkKGS7HHudJjJv/7EN0S5V3mCOEFQ8GnHB/UFpp7o3Lab/H1grtj4bKlrcOjR5XFI/PDHNzvc=', NULL, 0, NULL, NULL, NULL, NULL);
 
 --
 -- Index pour les tables déchargées
@@ -131,7 +147,7 @@ ALTER TABLE `client`
 -- Index pour la table `images`
 --
 ALTER TABLE `images`
-  ADD PRIMARY KEY (`clientID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Index pour la table `labels`
@@ -159,25 +175,31 @@ ALTER TABLE `passwords`
 -- AUTO_INCREMENT pour la table `client`
 --
 ALTER TABLE `client`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `images`
+--
+ALTER TABLE `images`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `labels`
 --
 ALTER TABLE `labels`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `passwords`
 --
 ALTER TABLE `passwords`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
